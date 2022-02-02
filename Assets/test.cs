@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class test : MonoBehaviour
 {
+    private int grindCount;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,10 +21,14 @@ public class test : MonoBehaviour
     {
         Debug.Log("works");
         Debug.Log(collision.relativeVelocity.magnitude);
-        if (collision.relativeVelocity.magnitude > 2)
+        if(collision.gameObject.tag == "Mortal")
         {
-            
-            
+            if (collision.relativeVelocity.magnitude > 2 && grindCount < 4)
+            {
+                grindCount++;
+                Debug.Log("test" + grindCount);
+            }
         }
+        
     }
 }
