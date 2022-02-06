@@ -6,6 +6,9 @@ TagManager:
   tags:
   - MortalContents
   - Mortal
+  - BlackSesameSeeds
+  - BrownSugar
+  - Butter
   layers:
   - Default
   - TransparentFX
