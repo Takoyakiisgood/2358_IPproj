@@ -13,7 +13,7 @@ public class GrindSequence : MonoBehaviour
         Debug.Log(collision.relativeVelocity.magnitude);
         if(collision.gameObject.tag == "Mortal")
         {
-            if (collision.relativeVelocity.magnitude > 2 && grindCount < 3)
+            if (collision.relativeVelocity.magnitude > 2 && collision.relativeVelocity.magnitude < 4 && grindCount < 3)
             {
                 grindCount++;
                 Debug.Log("GrindCount: " + grindCount);
@@ -36,6 +36,16 @@ public class GrindSequence : MonoBehaviour
             else if(grindCount == 3)
             {
                 grindArray[grindCount].SetActive(true);
+            }
+
+            else if (collision.relativeVelocity.magnitude < 2)
+            {
+                Debug.Log("Too much force!");
+
+            }
+            else if (collision.relativeVelocity.magnitude > 4)
+            {
+                Debug.Log("Too little force!");
             }
         }
         

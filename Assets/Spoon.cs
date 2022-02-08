@@ -17,11 +17,13 @@ public class Spoon : MonoBehaviour
 
         else if(other.gameObject.tag == "Plate")
         {
-            foreach (Transform obj in transform)
+            Debug.Log("collide with plate");
+            foreach (Transform obj in gameObject.transform)
             {
+                Debug.Log(obj.name);
                 if (obj.tag == "RoundDough")
                 {
-                    transform.parent = null;
+                    obj.transform.parent = null;
                 }
             }
         }
