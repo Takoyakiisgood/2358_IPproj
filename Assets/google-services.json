@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "382106561388",
+    "firebase_url": "https://dda-firebase-jordan-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "dda-firebase-jordan",
+    "storage_bucket": "dda-firebase-jordan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382106561388:android:e550078941b107ab532149",
+        "android_client_info": {
+          "package_name": "com.jordan.dda.db"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "382106561388-bo85sl3houq3j03ehp5e5b0okueh12cg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmCsMEOeE9JuAJqFV55sJRAsJ0aNlDZm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "382106561388-bo85sl3houq3j03ehp5e5b0okueh12cg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
