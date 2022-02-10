@@ -11,6 +11,7 @@ public class Stiring : MonoBehaviour
     private bool point2;
     [SerializeField]
     private bool stirDone;
+    [SerializeField]
     private bool mixtureInside;
 
     [Header("To be Assigned")]
@@ -27,11 +28,14 @@ public class Stiring : MonoBehaviour
 
     public void SetPoint1()
     {
-        if (!stirDone)
-        {
-            point1 = true;
+        //check if the mixture is inside before the user can stir 
+        if (mixtureInside) {
+            if (!stirDone)
+            {
+                point1 = true;
+            }
         }
-        
+                 
     }
 
     public void SetMixture()
@@ -41,19 +45,24 @@ public class Stiring : MonoBehaviour
 
     public void SetPoint2()
     {
-        //check if spoon touches point 1 first before point 2 to count 1 stir
-        if (point1 && !point2 && !stirDone && mixtureInside)
+        //check if the mixture is inside before the user can stir      
+        if (mixtureInside)
         {
-            point2 = true;
+            //check if spoon touches point 1 first before point 2 to count 1 stir
+            if (point1 && !point2 && !stirDone)
+            {
+                point2 = true;
+            }
+            else
+            {
+                //display error message
+                Debug.Log("Stir it in a clockwise manner");
+                //Reset the points
+                point1 = false;
+                point2 = false;
+            }
         }
-        else
-        {
-            //display error message
-            Debug.Log("Stir it in a clockwise manner");
-            //Reset the points
-            point1 = false;
-            point2 = false;
-        }
+        
     }
 
     public void IncreaseStir()
