@@ -6,17 +6,19 @@ public class CheckContents : MonoBehaviour
 {
     private int contentCount;
     public GameObject[] contentArray;
+    public string[] contentName;
     private bool contentChecked;
+
     private void OnTriggerEnter(Collider other)
     {
-        
-        if (other.gameObject.tag == "BrownSugar")
+
+        if (other.gameObject.name == contentName[0])
         {
             Destroy(other.gameObject);
             contentArray[0].SetActive(true);
             contentCount++;
         }
-        else if (other.gameObject.tag == "BlackSesameSeeds")
+        else if (other.gameObject.name == contentName[1])
         {
             Destroy(other.gameObject);
             contentArray[1].SetActive(true);
