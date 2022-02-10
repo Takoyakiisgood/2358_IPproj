@@ -112,7 +112,30 @@ public class FirebaseManager : MonoBehaviour
         });
     }
 
+    public async Task<Recipe> GetRecipe(string uuid)
+    {
+        Query q = dbPlayerDataReference.Child(uuid).LimitToFirst(1);
+        Recipe recipe = null;
 
+        await dbPlayerDataReference.GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled || task.IsFaulted)
+            {
+                Debug.LogError("There was an error retrieving player stats.\nError: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot ds = task.Result;
+
+                if (ds.Child(uuid).Exists)
+                {
+                    recipe = JsonUtility.FromJson<Recipe>(ds.Child(uuid).GetRawJsonValue());
+                }
+            }
+        });
+
+        return recipe;
+    }
     public async Task<PlayerData> GetPlayerData(string uuid)
     {
         Query q = dbPlayerDataReference.Child(uuid).LimitToFirst(1);
