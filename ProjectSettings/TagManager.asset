@@ -13,6 +13,7 @@ TagManager:
   - Plate
   - RoundDough
   - kneadDough
+  - RollDough
   layers:
   - Default
   - TransparentFX
