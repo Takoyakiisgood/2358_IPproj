@@ -4,32 +4,25 @@ using UnityEngine;
 
 public class flatten : MonoBehaviour
 {
-    public GameObject flatVersion;
-    private void OnTriggerEnter(Collider other)
+    public GameObject prefab;
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.gameObject.name == "rollingPin")
-        {
-            //play the animation 
+        if (collision.gameObject.name == "RollingPin")
+        { 
             //show the dough into 4 pieces
-        }
-    }
-
-    private IEnumerator Waitfor(int sec)
-    {
-        yield return new WaitForSeconds(sec);
-        //set the flat dough to active
-        if (flatVersion != null)
-        {
-            flatVersion.SetActive(true);
+            if (prefab != null)
+            {
+                GameObject flatDough = Instantiate(prefab, this.transform.position, Quaternion.identity);
+                Destroy(this.gameObject);
+                //increase the count for flattening the Dough
+                GameManager.instance.flattenDough();
+            }
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (flatVersion != null)
-        {
-            flatVersion.SetActive(false);
-        }
+    
     }
 }
