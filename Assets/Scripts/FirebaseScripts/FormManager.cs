@@ -16,10 +16,8 @@ using UnityEngine.UI;
 using System.Text;
 using System.Text.RegularExpressions;
 using TMPro;
-using Firebase;
-using Firebase.Extensions;
-using Firebase.Database;
 using System.Threading.Tasks;
+using Proyecto26;
 
 public class FormManager : MonoBehaviour
 {
@@ -31,10 +29,19 @@ public class FormManager : MonoBehaviour
     public InputField passwordInput1;
     public InputField userNameInput;
 
-    public AuthManager authManager;
+    public static int playerScore;
+    public static string playerName;
+
+    private string idToken;
+
+    public static string localId;
+
+    private string getLocalId;
 
     public Animator mainMenuAnimator;
 
+    private string databaseURL = "https://mesakanharmoni-default-rtdb.asia-southeast1.firebasedatabase.app/players";
+    private string AuthKey = "AIzaSyAypqI1GuYE9cqqU_Zd6SUsi7daiiomt1s";
     private void Awake()
     {
         Instance = this;
@@ -62,16 +69,39 @@ public class FormManager : MonoBehaviour
         int currentDay = 1;
         bool active = true;
 
-        authManager.SignUpNewUser(userName, email, cultural, food, password, currentDay, active);
         Debug.Log("Sign Up...");
         mainMenuAnimator.SetTrigger("Up");
+        string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
+        RestClient.Post<SignResponse>("https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + AuthKey, userData).Then(
+            response =>
+            {
+                idToken = response.idToken;
+                localId = response.localId;
+                playerName = userName;
+                PostToDatabase(true);
+
+            }).Catch(error =>
+            {
+                Debug.Log(error);
+            });
+    }
+
+    private void PostToDatabase(bool emptyScore = false)
+    {
+        User user = new User();
+
+        if (emptyScore)
+        {
+            user.userScore = 0;
+        }
+
+        RestClient.Put(databaseURL + "/" + localId + ".json?auth=" + idToken, user);
     }
 
     public void OnLogIn()
     {
         string email = emailInput.text.Trim();
         string password = passwordInput.text.Trim();
-        _ = authManager.SignInUser(email, password);
         Debug.Log("Log In...");
         mainMenuAnimator.SetTrigger("Up");
     }
@@ -79,7 +109,6 @@ public class FormManager : MonoBehaviour
     {
         bool active = false;
         
-        authManager.SignOutUser(authManager.GetCurrentUser(), active);
         Debug.Log("Signing Out...");
         emailInput.text = "";
         passwordInput.text = "";
@@ -89,7 +118,6 @@ public class FormManager : MonoBehaviour
     public void OnForgetPassword()
     {
         string email = emailInput.text.Trim();
-        authManager.ForgetPassword(email);
         Debug.Log("Sending Forget Password Email...");
     }
 

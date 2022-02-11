@@ -1,64 +1,131 @@
-/******************************************************************************
-Team Name: 2359Studios
-
-Author: Jordan Yeo Xiang Yu, Celest Goh Zi Xuan, Theng Sun Yu, Esther Ho Enqi, Ng Hui Ling
-
-Name of Class: PlayerData
-
-Description of Class: This class wll handle playerdata and update data to firebase.
-
-Date Created: 15/12/2021
-******************************************************************************/
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using FullSerializer;
+using Proyecto26;
 using UnityEngine;
-using System;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
-public class PlayerData
+public class PlayerData : MonoBehaviour
 {
-    public string userName;
-    public string email;
-    public string cultural;
-    public string food;
-    public long lastLoggedIn;
-    public long createdOn;
-    public long updatedOn;
-    public int currentStep;
-    public bool active;
+    public Text scoreText;
+    public InputField getScoreText;
+
+    public InputField emailText;
+    public InputField usernameText;
+    public InputField passwordText;
+
+    private System.Random random = new System.Random();
+
+    User user = new User();
+
+    private string databaseURL = "https://mesakanharmoni-default-rtdb.asia-southeast1.firebasedatabase.app/players/";
+    private string AuthKey = "AIzaSyAypqI1GuYE9cqqU_Zd6SUsi7daiiomt1s";
 
 
-    public PlayerData()
+
+    public static int playerScore;
+    public static string playerName;
+
+    private string idToken;
+
+    public static string localId;
+
+    private string getLocalId;
+
+
+    private void Start()
     {
-       
+        playerScore = random.Next(0, 101);
+        scoreText.text = "Score: " + playerScore;
+        SignUpUserButton();
+
     }
 
-    public PlayerData(string userName, string email, string cultural, string food, int currentStep, bool active)
+    private void Update()
     {
-        this.userName = userName;
-        this.email = email;
-        this.currentStep = currentStep;
-        this.active = active;
-        this.cultural = cultural;
-        this.food = food;
-        var timestamp = this.GetTimeUnix();
-        this.lastLoggedIn = timestamp;
-        this.createdOn = timestamp;
-        this.updatedOn = timestamp;
+        
+    }
+    public void OnSubmit()
+    {
+        PostToDatabase();
     }
 
-    public string SaveToJson()
+    private void UpdateScore()
     {
-        return JsonUtility.ToJson(this);
+        scoreText.text = "Score: " + user.userScore;
     }
 
-    public long GetTimeUnix()
+    private void PostToDatabase(bool emptyScore = false)
     {
-        return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+        User user = new User();
+
+        if (emptyScore)
+        {
+            user.userScore = 0;
+        }
+
+        RestClient.Put(databaseURL + "/" + localId + ".json?auth=" + idToken, user);
     }
-    public string PrintPlayerData()
+
+    private void RetrieveFromDatabase()
     {
-        return String.Format("User Name: {0}\n Email: {1}",
-            this.userName, this.email
-            );
+        RestClient.Get<User>(databaseURL + "/" + getLocalId + ".json?auth=" + idToken).Then(response =>
+        {
+            user = response;
+            UpdateScore();
+        });
     }
+
+    public void SignUpUserButton()
+    {
+        SignUpUser("test5@gmail.com", "test5", "abc1235");
+    }
+
+    public void SignInUserButton()
+    {
+        SignInUser(emailText.text, passwordText.text);
+    }
+
+    private void SignUpUser(string email, string username, string password)
+    {
+        string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
+        RestClient.Post<SignResponse>("https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + AuthKey, userData).Then(
+            response =>
+            {
+                idToken = response.idToken;
+                localId = response.localId;
+                playerName = username;
+                PostToDatabase(true);
+                Debug.Log(userData);
+
+            }).Catch(error =>
+            {
+                Debug.Log(error);
+            });
+    }
+
+    private void SignInUser(string email, string password)
+    {
+        string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
+        RestClient.Post<SignResponse>("https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" + AuthKey, userData).Then(
+            response =>
+            {
+                idToken = response.idToken;
+                localId = response.localId;
+                GetUsername();
+            }).Catch(error =>
+            {
+                Debug.Log(error);
+            });
+    }
+
+    private void GetUsername()
+    {
+        RestClient.Get<User>(databaseURL + "/" + localId + ".json?auth=" + idToken).Then(response =>
+        {
+            playerName = response.userName;
+        });
+    }
+
 }
