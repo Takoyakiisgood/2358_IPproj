@@ -16,7 +16,7 @@ public class GrindSequence : MonoBehaviour
             if (collision.relativeVelocity.magnitude > 2 && collision.relativeVelocity.magnitude < 4 && grindCount < 3)
             {
                 grindCount++;
-                Debug.Log("GrindCount: " + grindCount);
+                //Debug.Log("GrindCount: " + grindCount);
             }
 
             if(grindCount != 0)
@@ -36,6 +36,7 @@ public class GrindSequence : MonoBehaviour
             else if(grindCount == 3)
             {
                 grindArray[grindCount].SetActive(true);
+                GameManager.instance.grindProcess();
             }
 
             else if (collision.relativeVelocity.magnitude < 2)

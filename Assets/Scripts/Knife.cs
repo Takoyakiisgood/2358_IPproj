@@ -33,6 +33,10 @@ public class Knife : MonoBehaviour
                     cutSequence[cutCount - 1].SetActive(false);
                 }
 
+                if(cutCount == 3)
+                {
+                    GameManager.instance.cutDough();
+                }
             }
 
         }

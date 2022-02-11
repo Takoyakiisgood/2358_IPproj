@@ -12,6 +12,7 @@ public class Spoon : MonoBehaviour
         if(other.gameObject.tag == "Paste")
         {
             GameObject mySpoon =  Instantiate(prefab, spawnPosition.position, Quaternion.identity);
+            GameManager.instance.scoopPaste();
             mySpoon.transform.parent = transform;
         }
 

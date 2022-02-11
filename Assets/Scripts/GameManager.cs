@@ -19,8 +19,13 @@ public class GameManager : MonoBehaviour
     [Header("Check Task Complete")]
     [SerializeField]
     private bool flattenDoughComplete;
+    private bool cutDoughComplete;
+    private bool grindProcessComplete;
+    private bool mixingProcessComplete;
+    private bool scoopPasteComplete;
     [SerializeField]
     private int flatCount = 0;
+    private int scoopCount = 0;
     private void Awake()
     {
         instance = this;
@@ -28,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     public void flattenDough() 
     {
-        //check if flattenDough is ompleted
+        //check if flattenDough is Completed
         if (!flattenDoughComplete)
         {
             ++flatCount;
@@ -38,6 +43,37 @@ public class GameManager : MonoBehaviour
             }
         }
         else 
+        {
+            //mark task as done        
+        }
+    }
+    public void cutDough()
+    {
+        cutDoughComplete = true;
+    }
+    public void grindProcess()
+    {
+        grindProcessComplete = true;
+    }
+
+    public void mixPasteWithButter()
+    {
+        mixingProcessComplete = true;
+    }
+
+    public void scoopPaste()
+    {
+        //check if flattenDough is Completed
+        if (!scoopPasteComplete)
+        {
+            
+            ++scoopCount;
+            if (scoopCount == 4)
+            {
+                scoopPasteComplete = true;
+            }
+        }
+        else
         {
             //mark task as done        
         }
