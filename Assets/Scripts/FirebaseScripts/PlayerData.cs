@@ -38,11 +38,13 @@ public class PlayerData : MonoBehaviour
     {
         playerScore = random.Next(0, 101);
         scoreText.text = "Score: " + playerScore;
+        SignUpUserButton();
+
     }
 
     private void Update()
     {
-        SignUpUserButton();
+        
     }
     public void OnSubmit()
     {
@@ -77,7 +79,7 @@ public class PlayerData : MonoBehaviour
 
     public void SignUpUserButton()
     {
-        SignUpUser("test3@gmail.com", "test3", "abc123");
+        SignUpUser("test5@gmail.com", "test5", "abc1235");
     }
 
     public void SignInUserButton()
@@ -95,6 +97,7 @@ public class PlayerData : MonoBehaviour
                 localId = response.localId;
                 playerName = username;
                 PostToDatabase(true);
+                Debug.Log(userData);
 
             }).Catch(error =>
             {
