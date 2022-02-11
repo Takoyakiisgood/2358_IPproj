@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int flatCount = 0;
     private int scoopCount = 0;
+
+    public GameObject Decoration;
+
     private void Awake()
     {
         instance = this;
