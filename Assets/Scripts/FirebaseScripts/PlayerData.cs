@@ -22,8 +22,6 @@ public class PlayerData : MonoBehaviour
     private string databaseURL = "https://mesakanharmoni-default-rtdb.asia-southeast1.firebasedatabase.app/players/";
     private string AuthKey = "AIzaSyAypqI1GuYE9cqqU_Zd6SUsi7daiiomt1s";
 
-
-
     public static int playerScore;
     public static string playerName;
 
@@ -36,8 +34,9 @@ public class PlayerData : MonoBehaviour
 
     private void Start()
     {
-        playerScore = random.Next(0, 101);
-        scoreText.text = "Score: " + playerScore;
+        //playerScore = random.Next(0, 101);
+        //scoreText.text = "Score: " + playerScore;
+        Debug.Log("hello");
         SignUpUserButton();
 
     }
@@ -90,19 +89,20 @@ public class PlayerData : MonoBehaviour
     private void SignUpUser(string email, string username, string password)
     {
         string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
-        RestClient.Post<SignResponse>("https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + AuthKey, userData).Then(
-            response =>
-            {
-                idToken = response.idToken;
-                localId = response.localId;
-                playerName = username;
-                PostToDatabase(true);
-                Debug.Log(userData);
+        Debug.Log(userData);
+        //RestClient.Post<SignResponse>("https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + AuthKey, userData).Then(
+        //    response =>
+        //    {
+        //        idToken = response.idToken;
+        //        localId = response.localId;
+        //        playerName = username;
+        //        PostToDatabase(true);
 
-            }).Catch(error =>
-            {
-                Debug.Log(error);
-            });
+
+        //    }).Catch(error =>
+        //    {
+        //        Debug.Log(error);
+        //    });
     }
 
     private void SignInUser(string email, string password)
