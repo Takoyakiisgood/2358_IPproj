@@ -14,6 +14,8 @@ TagManager:
   - RoundDough
   - kneadDough
   - RollDough
+  - FlattenDough
+  - Ginger
   layers:
   - Default
   - TransparentFX
