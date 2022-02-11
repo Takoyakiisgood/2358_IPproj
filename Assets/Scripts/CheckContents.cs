@@ -35,6 +35,7 @@ public class CheckContents : MonoBehaviour
                 }
 
                 contentArray[contentCount].SetActive(true);
+                GameManager.instance.mixPasteWithButter();
                 contentChecked = true;
             }
             
