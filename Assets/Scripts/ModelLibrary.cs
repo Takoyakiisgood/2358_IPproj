@@ -1,5 +1,7 @@
 ﻿
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControl;
 using Microsoft.MixedReality.Toolkit.UI;
@@ -30,10 +32,12 @@ public class ModelLibrary : MonoBehaviour
     /*
      * Asset Variables
      */
-    private Vector3[] originalPosition;
-    private Quaternion[] originalRotation;
+    [SerializeField]
+    private List<Vector3> originalPosition;
+    [SerializeField]
+    private List<Quaternion> originalRotation;
 
-    private void Awake()
+    private void Start()
     {
         //hide the asset that should be hidden at first
         for (int i = 0; i < SetupAsset.Length; i++)
@@ -44,9 +48,10 @@ public class ModelLibrary : MonoBehaviour
         //get the boundscontrol, objectmanipulator and nearinteractiongrabble to inactive to not allow the object to be movable
         for (int i = 0; i < InteractableAsset.Length; i++)
         {
-            InteractableAsset[i].GetComponent<BoundsControl>().enabled = true;
-            InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = true;
-            InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = true;
+            InteractableAsset[i].GetComponent<BoundsControl>().enabled = false;
+            InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = false;
+            InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = false;
+            
         }
     }
 
@@ -56,8 +61,8 @@ public class ModelLibrary : MonoBehaviour
         //get the boundscontrol, objectmanipulator and nearinteractiongrabble to active to allow the object to be movable
         for (int i = 0; i < InteractableAsset.Length; i++)
         {
-            originalPosition[i] = InteractableAsset[i].transform.position;
-            originalRotation[i] = InteractableAsset[i].transform.rotation;
+            originalPosition.Add(InteractableAsset[i].transform.position);
+            originalRotation.Add(InteractableAsset[i].transform.rotation);
             InteractableAsset[i].GetComponent<BoundsControl>().enabled = true;
             InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = true;
             InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = true;
@@ -73,9 +78,6 @@ public class ModelLibrary : MonoBehaviour
             InteractableAsset[i].transform.position = originalPosition[i];
             InteractableAsset[i].transform.rotation = originalRotation[i];
         }
-
-        //transform.position = originalPosition;
-        //transform.rotation = originalRotation;
     }
     
 }

@@ -17,6 +17,8 @@ TagManager:
   - FlattenDough
   - Ginger
   - Water
+  - PandanLeave
+  - Flour
   layers:
   - Default
   - TransparentFX
