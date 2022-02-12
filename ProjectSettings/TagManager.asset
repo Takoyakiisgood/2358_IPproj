@@ -16,6 +16,7 @@ TagManager:
   - RollDough
   - FlattenDough
   - Ginger
+  - Water
   layers:
   - Default
   - TransparentFX

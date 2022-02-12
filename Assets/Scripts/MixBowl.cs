@@ -29,13 +29,13 @@ public class MixBowl : MonoBehaviour
         //Debug.Log(other.gameObject.name + " is collided");
         //Check if the content needed is the correct item,
         //if yes, destroy the collider object && set it to appear on the mixing bowl
-        if (other.gameObject.name == contentName[0])
+        if (other.gameObject.tag == contentName[0]) //water
         {
             Destroy(other.gameObject);
             contentArray[0].SetActive(true);
             waterInside = true;
         }
-        else if (other.gameObject.name == contentName[1])
+        else if (other.gameObject.tag == contentName[1]) //flour
         {
             Destroy(other.gameObject);
             contentArray[1].SetActive(true);
