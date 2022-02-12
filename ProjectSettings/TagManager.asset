@@ -19,6 +19,8 @@ TagManager:
   - Water
   - PandanLeave
   - Flour
+  - Pot
+  - FinalIngredients
   layers:
   - Default
   - TransparentFX
