@@ -5,9 +5,12 @@ using UnityEngine;
 public class Boiling : MonoBehaviour
 {
     public ParticleSystem[] boilContents;
+    public ParticleSystem[] fireArray;
     private float timer;
     private float duration = 10f;
     private bool startBoil;
+    private bool hasOn;
+    public Animator animator;
     private void Update()
     {
         Debug.Log(timer);
@@ -23,6 +26,28 @@ public class Boiling : MonoBehaviour
         }
     }
 
+    public void StartFire()
+    {
+        if (!hasOn)
+        {
+            animator.SetBool("KnobOn", true);
+            hasOn = true;
+            for (int i = 0; i < boilContents.Length; i++)
+            {
+                fireArray[i].Play();
+            }
+        }
+        else
+        {
+            animator.SetBool("KnobOn", false);
+            hasOn = false;
+            for (int i = 0; i < boilContents.Length; i++)
+            {
+                fireArray[i].Stop();
+            }
+        }
+        
+    }
     public void StartTimer()
     {
         timer = duration;

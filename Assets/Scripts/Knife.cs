@@ -49,14 +49,21 @@ public class Knife : MonoBehaviour
                 timer = 0.5f;
                 sliceCount++;
 
-                if (sliceCount < sliceSequence.Length)
+                if (sliceCount < sliceSequence.Length-1)
                 {
                     sliceSequence[sliceCount].SetActive(true);
                 }
 
-                if (sliceCount == 2)
+                if (sliceCount == 1)
                 {
                     sliceSequence[0].SetActive(false);
+                    sliceSequence[sliceCount].SetActive(true);
+                }
+                else if(sliceCount == 2)
+                {
+                    sliceSequence[sliceCount].SetActive(true);
+                    sliceSequence[sliceCount+1].SetActive(true);
+                    sliceSequence[4].SetActive(false);
                 }
             }
             
