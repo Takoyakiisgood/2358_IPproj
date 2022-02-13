@@ -9,7 +9,7 @@ public class Boiling : MonoBehaviour
     private float timer;
     private float duration = 10f;
     private bool startBoil;
-    private bool hasOn;
+    private bool hasOn; 
     public Animator animator;
     private void Update()
     {
@@ -32,7 +32,7 @@ public class Boiling : MonoBehaviour
         {
             animator.SetBool("KnobOn", true);
             hasOn = true;
-            for (int i = 0; i < boilContents.Length; i++)
+            for (int i = 0; i < fireArray.Length; i++)
             {
                 fireArray[i].Play();
             }
@@ -41,10 +41,12 @@ public class Boiling : MonoBehaviour
         {
             animator.SetBool("KnobOn", false);
             hasOn = false;
-            for (int i = 0; i < boilContents.Length; i++)
+            StopBoiling();
+            for (int i = 0; i < fireArray.Length; i++)
             {
                 fireArray[i].Stop();
             }
+
         }
         
     }
@@ -58,6 +60,15 @@ public class Boiling : MonoBehaviour
         for (int i = 0; i < boilContents.Length; i++)
         {
             boilContents[i].Play();
+        }
+    }
+    
+    private void StopBoiling()
+    {
+        startBoil = false;
+        for (int i = 0; i < boilContents.Length; i++)
+        {
+            boilContents[i].Stop();
         }
     }
 }
