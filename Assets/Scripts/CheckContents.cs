@@ -14,11 +14,38 @@ public class CheckContents : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "FinalIngredients")
+        if (other.gameObject.name == contentName[0])
+        {
+            Destroy(other.gameObject);
+            contentArray[0].SetActive(true);
+            contentCount++;
+        }
+        else if (other.gameObject.name == contentName[1])
+        {
+            Destroy(other.gameObject);
+            contentArray[1].SetActive(true);
+            contentCount++;
+        }
+
+        if (contentCount == 2)
+        {
+            if (!contentChecked)
+            {
+                for (int i = contentCount; i > -1; i--)
+                {
+                    contentArray[i].SetActive(false);
+                }
+
+                contentArray[contentCount].SetActive(true);
+                GameManager.instance.mixPasteWithButter();
+                contentChecked = true;
+            }
+
+        }
+        else if (other.gameObject.tag == "FinalIngredients" || other.gameObject.tag == "BrownSugar")
         {
             if (other.gameObject.name == contentName[0])
             {
-                Destroy(other.gameObject);
                 finalContent[0].SetActive(true);
             }
             else if (other.gameObject.name == contentName[1])
@@ -43,34 +70,7 @@ public class CheckContents : MonoBehaviour
         }
         else
         {
-            if (other.gameObject.name == contentName[0])
-            {
-                Destroy(other.gameObject);
-                contentArray[0].SetActive(true);
-                contentCount++;
-            }
-            else if (other.gameObject.name == contentName[1])
-            {
-                Destroy(other.gameObject);
-                contentArray[1].SetActive(true);
-                contentCount++;
-            }
-
-            if (contentCount == 2)
-            {
-                if (!contentChecked)
-                {
-                    for (int i = contentCount; i > -1; i--)
-                    {
-                        contentArray[i].SetActive(false);
-                    }
-
-                    contentArray[contentCount].SetActive(true);
-                    GameManager.instance.mixPasteWithButter();
-                    contentChecked = true;
-                }
-
-            }
+            
         }
         
 

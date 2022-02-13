@@ -45,28 +45,7 @@ MonoBehaviour:
       description: Toggle Profiler
       axisConstraint: 0
   - localizationKey: 
-    keyword: Show Car
-    keyCode: 52
-    action:
-      id: 0
-      description: Toggle Profiler
-      axisConstraint: 0
-  - localizationKey: 
-    keyword: Show HoloLens
-    keyCode: 53
-    action:
-      id: 0
-      description: Toggle Profiler
-      axisConstraint: 0
-  - localizationKey: 
-    keyword: Show Engine
-    keyCode: 54
-    action:
-      id: 0
-      description: Toggle Profiler
-      axisConstraint: 0
-  - localizationKey: 
-    keyword: Reset Model
+    keyword: Reset
     keyCode: 55
     action:
       id: 0
