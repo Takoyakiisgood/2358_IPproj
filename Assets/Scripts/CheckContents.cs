@@ -9,29 +9,33 @@ public class CheckContents : MonoBehaviour
     public GameObject[] finalContent;
     public string[] contentName;
     private bool contentChecked;
-
+    public bool hasChecked;
     private int gingerCount;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name == contentName[0])
         {
-            Destroy(other.gameObject);
             contentArray[0].SetActive(true);
             contentCount++;
         }
         else if (other.gameObject.name == contentName[1])
         {
-            Destroy(other.gameObject);
-            contentArray[1].SetActive(true);
-            contentCount++;
+            if(hasChecked == false)
+            {
+                Destroy(other.gameObject);
+                contentArray[1].SetActive(true);
+                contentCount++;
+                hasChecked = true;
+            }
+            
         }
 
         if (contentCount == 2)
         {
             if (!contentChecked)
             {
-                for (int i = contentCount; i > -1; i--)
+                for (int i = 0; i < contentCount-1; i++)
                 {
                     contentArray[i].SetActive(false);
                 }
