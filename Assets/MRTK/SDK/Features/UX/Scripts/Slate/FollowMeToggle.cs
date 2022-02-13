@@ -146,6 +146,7 @@ namespace Microsoft.MixedReality.Toolkit.UI
             {
                 SetFollowMeBehavior(!radialView.enabled);
             }
+           
         }
 
         /// <summary>

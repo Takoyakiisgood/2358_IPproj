@@ -42,16 +42,28 @@ public class ModelLibrary : MonoBehaviour
         //hide the asset that should be hidden at first
         for (int i = 0; i < SetupAsset.Length; i++)
         {
-            SetupAsset[i].SetActive(false);
+            if (i == 0)
+            {
+                SetupAsset[i].SetActive(true);
+            }
+            else 
+            {
+                SetupAsset[i].SetActive(false);
+            }
+            
         }
 
         //get the boundscontrol, objectmanipulator and nearinteractiongrabble to inactive to not allow the object to be movable
         for (int i = 0; i < InteractableAsset.Length; i++)
         {
-            InteractableAsset[i].GetComponent<BoundsControl>().enabled = false;
+            //InteractableAsset[i].GetComponent<BoundsControl>().enabled = false;
             InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = false;
             InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = false;
-            
+            if (InteractableAsset[i].GetComponent<FixedRotationToWorldConstraint>() != null)
+            {
+                InteractableAsset[i].GetComponent<FixedRotationToWorldConstraint>().enabled = false;
+            }
+           
         }
     }
 
@@ -63,9 +75,15 @@ public class ModelLibrary : MonoBehaviour
         {
             originalPosition.Add(InteractableAsset[i].transform.position);
             originalRotation.Add(InteractableAsset[i].transform.rotation);
-            InteractableAsset[i].GetComponent<BoundsControl>().enabled = true;
+            //InteractableAsset[i].GetComponent<BoundsControl>().enabled = true;
             InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = true;
             InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = true;
+        }
+
+        for (int i = 0; i < SetupAsset.Length; i++)
+        {
+            SetupAsset[i].GetComponent<BoxCollider>().enabled = false;
+            
         }
 
     }
