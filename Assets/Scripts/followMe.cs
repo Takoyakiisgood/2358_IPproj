@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
 [RequireComponent(typeof(RadialView))]
-public class followMe : MonoBehaviour
+public class FollowMe : MonoBehaviour
 {
     private bool RadialViewActive = false;
     private void Start()

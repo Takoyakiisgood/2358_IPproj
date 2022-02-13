@@ -21,6 +21,7 @@ TagManager:
   - Flour
   - Pot
   - FinalIngredients
+  - Dough
   layers:
   - Default
   - TransparentFX

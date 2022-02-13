@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class flatten : MonoBehaviour
+public class Flatten : MonoBehaviour
 {
     public GameObject prefab;
     private void OnCollisionEnter(Collision collision)
