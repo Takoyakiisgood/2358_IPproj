@@ -1,9 +1,7 @@
 ﻿
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit.Input;
-using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControl;
 using Microsoft.MixedReality.Toolkit.UI;
 
 
@@ -12,7 +10,7 @@ Author: Ng Hui Ling, Jordan Yeo Xiang Yu
 
 Name of Class: ModelLibrary
 
-Description of Class: This class gets and set all the interactable asset used by the player.
+Description of Class: This class gets and set all the interactable asset transform values.
 
 Date Created: 12/02/2022
 ******************************************************************************/
@@ -53,17 +51,11 @@ public class ModelLibrary : MonoBehaviour
             
         }
 
-        //get the boundscontrol, objectmanipulator and nearinteractiongrabble to inactive to not allow the object to be movable
+        //get the objectmanipulator and nearinteractiongrabble to inactive to not allow the object to be movable
         for (int i = 0; i < InteractableAsset.Length; i++)
         {
-            //InteractableAsset[i].GetComponent<BoundsControl>().enabled = false;
             InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = false;
             InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = false;
-            if (InteractableAsset[i].GetComponent<FixedRotationToWorldConstraint>() != null)
-            {
-                InteractableAsset[i].GetComponent<FixedRotationToWorldConstraint>().enabled = false;
-            }
-           
         }
     }
 
@@ -75,15 +67,15 @@ public class ModelLibrary : MonoBehaviour
         {
             originalPosition.Add(InteractableAsset[i].transform.position);
             originalRotation.Add(InteractableAsset[i].transform.rotation);
-            //InteractableAsset[i].GetComponent<BoundsControl>().enabled = true;
+
             InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = true;
             InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = true;
         }
 
         for (int i = 0; i < SetupAsset.Length; i++)
         {
-            SetupAsset[i].GetComponent<BoxCollider>().enabled = false;
-            
+            //after the setup is done, set the collider to inactive. This is done to not affect the interactable assets from being selected
+            SetupAsset[i].GetComponent<BoxCollider>().enabled = false;            
         }
 
     }

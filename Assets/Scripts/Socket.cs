@@ -9,7 +9,7 @@ public class Socket : MonoBehaviour
     private bool targetInside;
     private void OnTriggerEnter(Collider other) {
         Debug.Log(other.gameObject.name + " is collided");
-        if (other.gameObject.name == TargetName  && !targetInside)
+        if (other.gameObject.tag == TargetName  && !targetInside)
         {
             //set the object position to the target position
             other.gameObject.GetComponent<Rigidbody>().MovePosition(target.position);
