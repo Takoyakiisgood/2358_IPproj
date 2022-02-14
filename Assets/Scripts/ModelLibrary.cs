@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 
-
 /******************************************************************************
 Author: Ng Hui Ling, Jordan Yeo Xiang Yu
 
