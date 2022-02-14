@@ -7,14 +7,16 @@ public class ChoppingBoard : MonoBehaviour
     [Header("To be Assigned")]
     [SerializeField]
     private GameObject ChangeDough;
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.tag == "Dough")
+        //Debug.Log(other.gameObject.name + " is collided");
+        if (other.gameObject.tag == "Dough")
         {
             if (ChangeDough != null)
             {
                 //destroy the current dough and change it to the assigned dough
-                Destroy(collision.gameObject);
+                Destroy(other.gameObject);
                 ChangeDough.SetActive(true);
             }
             else
@@ -23,6 +25,7 @@ public class ChoppingBoard : MonoBehaviour
             }
         }
     }
+
     // Start is called before the first frame update
     void Start()
     {

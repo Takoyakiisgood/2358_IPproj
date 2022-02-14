@@ -54,8 +54,15 @@ public class ModelLibrary : MonoBehaviour
         //get the objectmanipulator and nearinteractiongrabble to inactive to not allow the object to be movable
         for (int i = 0; i < InteractableAsset.Length; i++)
         {
-            InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = false;
-            InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = false;
+            if (InteractableAsset[i].GetComponent<NearInteractionGrabbable>() != null)
+            {
+                InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = false;
+            }
+            if (InteractableAsset[i].GetComponent<ObjectManipulator>() != null)
+            {
+                InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = false;
+            }
+                     
         }
     }
 
@@ -65,11 +72,19 @@ public class ModelLibrary : MonoBehaviour
         //get the boundscontrol, objectmanipulator and nearinteractiongrabble to active to allow the object to be movable
         for (int i = 0; i < InteractableAsset.Length; i++)
         {
+           
             originalPosition.Add(InteractableAsset[i].transform.position);
             originalRotation.Add(InteractableAsset[i].transform.rotation);
 
-            InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = true;
-            InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = true;
+            if (InteractableAsset[i].GetComponent<NearInteractionGrabbable>() != null)
+            {
+                InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = true;
+            }
+            if (InteractableAsset[i].GetComponent<ObjectManipulator>() != null)
+            {
+                InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = true;
+            }
+            
         }
 
         for (int i = 0; i < SetupAsset.Length; i++)

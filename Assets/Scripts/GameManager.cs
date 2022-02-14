@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    private bool setUpComplete;
+
     [Header("Check Task Complete")]
     [SerializeField]
     private bool flattenDoughComplete;
@@ -23,6 +25,10 @@ public class GameManager : MonoBehaviour
     private bool grindProcessComplete;
     private bool mixingProcessComplete;
     private bool scoopPasteComplete;
+
+    
+    private bool prepFilling, prepDough, prepTangYuan, prepSoup, cookTangYuan;
+
     [SerializeField]
     private int flatCount = 0;
     private int scoopCount = 0;
@@ -32,6 +38,19 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+    }
+
+    public void SetupComplete()
+    {
+        if (!setUpComplete)
+        {
+            setUpComplete = true;
+        }
+    }
+
+    public bool isSetupComplete()
+    {
+        return setUpComplete;
     }
 
     public void flattenDough() 

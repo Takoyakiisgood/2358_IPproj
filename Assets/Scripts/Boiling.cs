@@ -13,7 +13,7 @@ public class Boiling : MonoBehaviour
     public Animator animator;
     private void Update()
     {
-        Debug.Log(timer);
+        //Debug.Log(timer);
         if (startBoil == true) 
         {
             Debug.Log("START");
