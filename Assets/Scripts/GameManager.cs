@@ -25,8 +25,9 @@ public class GameManager : MonoBehaviour
     private bool grindProcessComplete;
     private bool mixingProcessComplete;
     private bool scoopPasteComplete;
+    private bool boilTangYuanComplete;
 
-    
+
     private bool prepFilling, prepDough, prepTangYuan, prepSoup, cookTangYuan;
 
     [SerializeField]
@@ -99,6 +100,11 @@ public class GameManager : MonoBehaviour
         {
             //mark task as done        
         }
+    }
+
+    public void BoilTangYuan()
+    {
+        boilTangYuanComplete = true;
     }
     // Start is called before the first frame update
     void Start()

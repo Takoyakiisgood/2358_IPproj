@@ -39,6 +39,10 @@ public class Spoon : MonoBehaviour
                 }
                 
             }
+            else if (sesameCount == 4)
+            {
+                Destroy(other.gameObject);
+            }
             
         }
 
