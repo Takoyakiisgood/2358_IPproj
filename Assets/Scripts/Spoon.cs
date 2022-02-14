@@ -6,6 +6,8 @@ public class Spoon : MonoBehaviour
 {
     public Transform spawnPosition;
     public GameObject prefab;
+    public GameObject[] plateContent;
+    public int sesameCount;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,7 +26,10 @@ public class Spoon : MonoBehaviour
                 Debug.Log(obj.name);
                 if (obj.tag == "RoundDough")
                 {
-                    obj.transform.parent = null;
+                    if(sesameCount < 4)
+                    Destroy(obj.gameObject);
+                    plateContent[sesameCount].SetActive(true);
+                    sesameCount++;
                 }
             }
         }
