@@ -12,12 +12,15 @@ public class CheckContents : MonoBehaviour
     public bool hasChecked;
     private int gingerCount;
 
+    public Material pasteMaterial;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name == contentName[0])
         {
             contentArray[0].SetActive(true);
             contentCount++;
+            
         }
         else if (other.gameObject.name == contentName[1])
         {
@@ -30,23 +33,26 @@ public class CheckContents : MonoBehaviour
             }
             
         }
-
+        else if (other.gameObject.name == contentName[2])
+        {
+            Destroy(other.gameObject);
+            pasteMaterial.SetFloat("_Smoothness", 0.93f);
+        }
         if (contentCount == 2)
         {
             if (!contentChecked)
             {
-                for (int i = 0; i < contentCount-1; i++)
+                for (int i = 0; i < contentArray.Length -1; i++)
                 {
                     contentArray[i].SetActive(false);
                 }
-
                 contentArray[contentCount].SetActive(true);
                 GameManager.instance.mixPasteWithButter();
                 contentChecked = true;
             }
 
         }
-        else if (other.gameObject.tag == "FinalIngredients" || other.gameObject.tag == "BrownSugar")
+        else if (other.gameObject.tag == "FinalIngredients")
         {
             if (other.gameObject.name == contentName[0])
             {
