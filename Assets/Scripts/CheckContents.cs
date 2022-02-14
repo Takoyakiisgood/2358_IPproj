@@ -16,29 +16,32 @@ public class CheckContents : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name == contentName[0])
+        if (other.gameObject.name == contentName[0] && GameManager.instance.isSetupComplete())
         {
-            contentArray[0].SetActive(true);
-            contentCount++;
-            
-        }
-        else if (other.gameObject.name == contentName[1])
-        {
-            if(hasChecked == false)
+            if (hasChecked == false)
             {
-                Destroy(other.gameObject);
-                contentArray[1].SetActive(true);
+                contentArray[0].SetActive(true);
                 contentCount++;
                 hasChecked = true;
             }
-            
+        
         }
-        else if (other.gameObject.name == contentName[2])
+        else if (other.gameObject.name == contentName[1] && GameManager.instance.isSetupComplete())
+        {
+        
+            Destroy(other.gameObject);
+            contentArray[1].SetActive(true);
+            contentCount++;
+
+        
+        }
+        else if (other.gameObject.name == contentName[2] && GameManager.instance.isSetupComplete())
         {
             Destroy(other.gameObject);
             pasteMaterial.SetFloat("_Smoothness", 0.93f);
         }
-        if (contentCount == 2)
+        
+        if (contentCount == 2 && GameManager.instance.isSetupComplete())
         {
             if (!contentChecked)
             {
@@ -52,7 +55,7 @@ public class CheckContents : MonoBehaviour
             }
 
         }
-        else if (other.gameObject.tag == "FinalIngredients")
+        else if (other.gameObject.tag == "FinalIngredients" && GameManager.instance.isSetupComplete())
         {
             if (other.gameObject.name == contentName[0])
             {
@@ -63,7 +66,7 @@ public class CheckContents : MonoBehaviour
                 Destroy(other.gameObject);
                 finalContent[1].SetActive(true);
             }
-            else if (other.gameObject.name == contentName[2])
+            else if (other.gameObject.name == contentName[2] && GameManager.instance.isSetupComplete())
             {
                 Destroy(other.gameObject);
                 gingerCount++;

@@ -6,13 +6,13 @@ public class TangYuan : MonoBehaviour
 {
     public GameObject prefab;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.tag == "FlattenDough")
+        if (other.gameObject.tag == "FlattenDough")
         {
-            Debug.Log(collision.gameObject.tag);
-            Instantiate(prefab, collision.gameObject.transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
+            Debug.Log(other.gameObject.tag);
+            Instantiate(prefab, other.gameObject.transform.position, Quaternion.identity);
+            Destroy(other.gameObject);
             Destroy(gameObject);
         }
     }

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Flatten : MonoBehaviour
+public class flatten : MonoBehaviour
 {
     public GameObject prefab;
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.name == "RollingPin")
+        if (other.gameObject.name == "RollingPin")
         { 
             //show the dough into 4 pieces
             if (prefab != null)

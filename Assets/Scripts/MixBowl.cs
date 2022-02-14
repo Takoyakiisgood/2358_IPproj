@@ -25,6 +25,9 @@ public class MixBowl : MonoBehaviour
     [SerializeField]
     private bool mixtureInside;
 
+    [SerializeField]
+    private GameObject tableObject;
+
     private void Start()
     {
         //set the bowl empty first
@@ -123,6 +126,9 @@ public class MixBowl : MonoBehaviour
                     Destroy(contentArray[0]); //Water
                     Destroy(contentArray[1]); //Flour
                     contentArray[2].SetActive(true);
+
+                    //detach parent of dough from mixbowl to tabletools
+                    contentArray[2].transform.parent = tableObject.transform;
                 }
 
                 //remove the following components from the mix bowl, to allow the player to pick up the dough
