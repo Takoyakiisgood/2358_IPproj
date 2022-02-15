@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int flatCount = 0;
     private int scoopCount = 0;
-
+    public int sugarCount;
     public GameObject Decoration;
 
     private void Awake()
@@ -102,6 +102,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void addSugarCount()
+    {
+        sugarCount++;
+    }
     public void BoilTangYuan()
     {
         boilTangYuanComplete = true;

@@ -14,7 +14,23 @@ public class CheckContents : MonoBehaviour
     private int tangYuanCount;
     private float timer;
     public Material pasteMaterial;
-
+    public Material waterMaterial;
+    private Color originalColor;
+    private float originalFloat;
+    private int sugarCount;
+    private void Start()
+    {
+        if (gameObject.name == "mortalcontents")
+        {
+            pasteMaterial.SetFloat("_Smoothness", 0f);
+        }
+        else if (gameObject.name == "potWithTangyuanWater")
+        {
+            waterMaterial.color = originalColor;
+        }
+        
+        
+    }
     private void Update()
     {
         if (timer > 0)
@@ -23,6 +39,11 @@ public class CheckContents : MonoBehaviour
             if(timer <= 0)
             {
                 finalContent[0].SetActive(false);
+                Color color1;
+                
+                ColorUtility.TryParseHtmlString("#B56500", out color1);
+                color1.a = 0.5f;
+                waterMaterial.color = color1;
             }
         }
     }
@@ -35,8 +56,12 @@ public class CheckContents : MonoBehaviour
                 contentArray[0].SetActive(true);
                 contentCount++;
                 hasChecked = true;
+                GameManager.instance.addSugarCount();
             }
-        
+            if (GameManager.instance.sugarCount == 2)
+            {
+                Destroy(other.gameObject);
+            }
         }
         else if (other.gameObject.name == contentName[1] && GameManager.instance.isSetupComplete() && gameObject.tag != "Pot")
         {
@@ -73,9 +98,20 @@ public class CheckContents : MonoBehaviour
             {
                 if (gameObject.tag == "Pot")
                 {
+                    bool hasChecked;
+                    hasChecked = false;
+                    if (!hasChecked)
+                    {
+                        finalContent[0].SetActive(true);
+                        timer = 5.0f;
+                        hasChecked = true;
+                        GameManager.instance.addSugarCount();
+                    }
+                    
+                }
+                if (GameManager.instance.sugarCount == 2)
+                {
                     Destroy(other.gameObject);
-                    finalContent[0].SetActive(true);
-                    timer = 5.0f;
                 }
 
             }
@@ -98,7 +134,7 @@ public class CheckContents : MonoBehaviour
                 }
 
             }
-            else if (other.gameObject.name == contentName[3] && GameManager.instance.isSetupComplete())
+            else if (other.gameObject.name == contentName[3] && GameManager.instance.isSetupComplete() && other.gameObject.tag != "Laddle")
             {
                 finalContent[tangYuanCount + 4].SetActive(true);
                 Destroy(other.gameObject);

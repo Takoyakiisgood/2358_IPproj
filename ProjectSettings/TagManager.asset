@@ -22,6 +22,8 @@ TagManager:
   - Pot
   - FinalIngredients
   - Dough
+  - EmptyBowl
+  - Laddle
   layers:
   - Default
   - TransparentFX
