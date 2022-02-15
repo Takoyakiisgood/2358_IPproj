@@ -17,12 +17,12 @@ MonoBehaviour:
   recognitionConfidenceLevel: 1
   speechCommands:
   - localizationKey: 
-    keyword: Menu
+    keyword: Show Menu
     keyCode: 51
     action:
-      id: 2
-      description: Menu
-      axisConstraint: 2
+      id: 0
+      description: None
+      axisConstraint: 0
   - localizationKey: 
     keyword: Select
     keyCode: 49
@@ -47,6 +47,41 @@ MonoBehaviour:
   - localizationKey: 
     keyword: Reset
     keyCode: 55
+    action:
+      id: 0
+      description: Toggle Profiler
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Close Settings
+    keyCode: 0
+    action:
+      id: 0
+      description: Toggle Profiler
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Quit Game
+    keyCode: 0
+    action:
+      id: 0
+      description: Toggle Profiler
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Play Game
+    keyCode: 0
+    action:
+      id: 0
+      description: Toggle Profiler
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: How To Play
+    keyCode: 0
+    action:
+      id: 0
+      description: Toggle Profiler
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Go Back
+    keyCode: 0
     action:
       id: 0
       description: Toggle Profiler
