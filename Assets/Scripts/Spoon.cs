@@ -42,6 +42,7 @@ public class Spoon : MonoBehaviour
             else if (sesameCount == 4)
             {
                 Destroy(other.gameObject);
+                GameManager.instance.scoopPaste();
             }
             
         }
@@ -70,7 +71,7 @@ public class Spoon : MonoBehaviour
                         {
                             plateContent[i].transform.parent = tableToolsParent.transform;
                         }
-
+                        GameManager.instance.PlacePasteOnPlate();
                         plate.GetComponent<BoxCollider>().enabled = false;
                         plate.GetComponent<NearInteractionGrabbable>().enabled = false;
                         plate.GetComponent<ObjectManipulator>().enabled = false;

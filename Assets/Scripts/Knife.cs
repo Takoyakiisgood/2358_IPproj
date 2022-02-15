@@ -64,6 +64,9 @@ public class Knife : MonoBehaviour
                     sliceSequence[sliceCount].SetActive(true);
                     sliceSequence[sliceCount+1].SetActive(true);
                     sliceSequence[4].SetActive(false);
+
+                    //Update sub task
+                    GameManager.instance.ChopGinger();
                 }
             }
             

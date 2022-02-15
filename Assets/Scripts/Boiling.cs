@@ -61,6 +61,7 @@ public class Boiling : MonoBehaviour
         {
             boilContents[i].Play();
         }
+        GameManager.instance.BoilWater();
     }
     
     private void StopBoiling()

@@ -76,6 +76,7 @@ public class CheckContents : MonoBehaviour
         {
             Destroy(other.gameObject);
             pasteMaterial.SetFloat("_Smoothness", 0.93f);
+            GameManager.instance.mixPasteWithButter();
         }
         
         if (contentCount == 2 && GameManager.instance.isSetupComplete())

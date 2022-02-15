@@ -18,6 +18,9 @@ public class ChoppingBoard : MonoBehaviour
                 //destroy the current dough and change it to the assigned dough
                 Destroy(other.gameObject);
                 ChangeDough.SetActive(true);
+
+                //Update sub task
+                GameManager.instance.PlaceDoughOnChoppingBoard();
             }
             else
             {

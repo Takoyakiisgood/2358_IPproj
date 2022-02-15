@@ -51,6 +51,9 @@ public class MixBowl : MonoBehaviour
             Destroy(other.gameObject);
             contentArray[0].SetActive(true);
             waterInside = true;
+
+            //Update sub task
+            GameManager.instance.AddHotWater();
         }
         else if (other.gameObject.tag == "Flour" && GameManager.instance.isSetupComplete())
         {
@@ -129,6 +132,9 @@ public class MixBowl : MonoBehaviour
 
                     //detach parent of dough from mixbowl to tabletools
                     contentArray[2].transform.parent = tableObject.transform;
+
+                    //Update mixture task
+                    GameManager.instance.StirMixture();
                 }
 
                 //remove the following components from the mix bowl, to allow the player to pick up the dough

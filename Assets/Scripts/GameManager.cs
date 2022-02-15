@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour
     private bool addIngredientsComplete;
     private bool stirMixtureComplete;
     private bool placeDoughComplete;
-    private bool kneadDoughComplete;
     private bool chopGingerComplete;
+    private bool scoopTangYuanComplete;
 
     private bool prepFilling, prepDough, prepTangYuan, prepSoup, cookTangYuan;
 
@@ -42,6 +42,9 @@ public class GameManager : MonoBehaviour
     private int flatCount = 0;
     private int scoopCount = 0;
     public int sugarCount;
+    private int tangYuanCount = 0;
+    private int finalIngredients = 0;
+    private int scoopTangYuanCount = 0;
     public GameObject Decoration;
 
     private void Awake()
@@ -75,7 +78,8 @@ public class GameManager : MonoBehaviour
         }
         else 
         {
-            //mark task as done        
+            //mark task as done
+            prepDough = true;
         }
     }
     public void cutDough()
@@ -107,9 +111,27 @@ public class GameManager : MonoBehaviour
         else
         {
             //mark task as done        
+            
         }
     }
+    public void scoopTangYuan()
+    {
+        //check if flattenDough is Completed
+        if (!scoopTangYuanComplete)
+        {
 
+            ++scoopTangYuanCount;
+            if (scoopTangYuanCount == 4)
+            {
+                scoopTangYuanComplete = true;
+            }
+        }
+        else
+        {
+            //mark task as done        
+            cookTangYuan = true;
+        }
+    }
     public void addSugarCount()
     {
         sugarCount++;
@@ -126,7 +148,17 @@ public class GameManager : MonoBehaviour
 
     public void AddIngredients()
     {
-        addIngredientsComplete = true;
+        finalIngredients++;
+        if(finalIngredients == 3)
+        {
+            addIngredientsComplete = true;
+        }
+        if (addIngredientsComplete)
+        {
+            prepSoup = true;
+        }
+
+        
     }
     public void GrindFilling()
     {
@@ -158,14 +190,13 @@ public class GameManager : MonoBehaviour
         cutDoughComplete = true;
     }
 
-    public void KneadDough()
-    {
-        kneadDoughComplete = true;
-    }
-
     public void AssembleTangYuan()
     {
-        prepTangYuan = true;
+        tangYuanCount++;
+        if(tangYuanCount == 4)
+        {
+            prepTangYuan = true;
+        }
     }
 
     public void ChopGinger()
@@ -173,6 +204,10 @@ public class GameManager : MonoBehaviour
         chopGingerComplete = true;
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
     // Start is called before the first frame update
     void Start()
     {

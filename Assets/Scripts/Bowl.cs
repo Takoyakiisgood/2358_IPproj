@@ -13,6 +13,7 @@ public class Bowl : MonoBehaviour
             if (Laddle.hasSoup == true)
             {
                 scoopCount++;
+                GameManager.instance.scoopTangYuan();
                 if (scoopCount == 1)
                 {
                     bowlContents[scoopCount].SetActive(true);

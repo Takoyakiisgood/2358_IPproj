@@ -14,6 +14,7 @@ public class TangYuan : MonoBehaviour
             Instantiate(prefab, other.gameObject.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
             Destroy(gameObject);
+            GameManager.instance.AssembleTangYuan();
         }
     }
 
