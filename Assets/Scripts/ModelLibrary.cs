@@ -39,14 +39,15 @@ public class ModelLibrary : MonoBehaviour
         //hide the asset that should be hidden at first
         for (int i = 0; i < SetupAsset.Length; i++)
         {
-            if (i == 0)
-            {
-                SetupAsset[i].SetActive(true);
-            }
-            else 
-            {
-                SetupAsset[i].SetActive(false);
-            }
+            SetupAsset[i].SetActive(false);
+            //if (i == 0)
+            //{
+            //    SetupAsset[i].SetActive(true);
+            //}
+            //else 
+            //{
+            //    SetupAsset[i].SetActive(false);
+            //}
             
         }
 
