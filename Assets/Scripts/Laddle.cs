@@ -6,40 +6,36 @@ public class Laddle : MonoBehaviour
 {
     public GameObject scoopOfSoup;
     public GameObject tangYuanSoup;
-    private int scoopCount;
-    private bool hasChecked;
+    public static bool hasSoup;
+    private float cooldown;
 
+    private void Update()
+    {
+        if(cooldown > 0)
+        {
+            cooldown -= Time.deltaTime;
+            if (cooldown < 0)
+            {
+                cooldown = 0;
+            }
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name == "TangYuan")
         {
-            tangYuanSoup.SetActive(true);
-
+            if(cooldown == 0)
+            {
+                scoopOfSoup.SetActive(true);
+                Destroy(other.gameObject);
+                cooldown = 3.0f;
+                hasSoup = true;
+            }
+            
         }
-        else if (other.gameObject.tag == "EmptyBowl")
+        else if(other.gameObject.tag == "EmptyBowl")
         {
-            scoopCount++;
-            GameObject scoop = Instantiate(tangYuanSoup, other.gameObject.transform.position, Quaternion.identity);
-            if (!hasChecked)
-            {
-                scoop.transform.parent = other.gameObject.transform;
-                hasChecked = true;
-            }
-            
-            if (scoopCount == 1)
-            {
-                scoop.gameObject.transform.Find(scoopCount + "/4 Scoop").gameObject.SetActive(true);
-                tangYuanSoup.SetActive(false);
-            }
-            else if(scoopCount <5)
-            {
-                scoop.gameObject.transform.Find(scoopCount + "/4 Scoop").gameObject.SetActive(true);
-                scoop.gameObject.transform.Find(scoopCount-1 + "/4 Scoop").gameObject.SetActive(false);
-                tangYuanSoup.SetActive(false);
-            }
-            
-
-            
+            scoopOfSoup.SetActive(false);
         }
     }
 

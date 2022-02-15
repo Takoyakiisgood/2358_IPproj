@@ -26,14 +26,22 @@ public class GameManager : MonoBehaviour
     private bool mixingProcessComplete;
     private bool scoopPasteComplete;
     private bool boilTangYuanComplete;
-
+    private bool grindPasteSeedsComplete;
+    private bool pasteOnPlateComplete;
+    private bool addHotWaterCompelte;
+    private bool waterBoiledComplete;
+    private bool addIngredientsComplete;
+    private bool stirMixtureComplete;
+    private bool placeDoughComplete;
+    private bool kneadDoughComplete;
+    private bool chopGingerComplete;
 
     private bool prepFilling, prepDough, prepTangYuan, prepSoup, cookTangYuan;
 
     [SerializeField]
     private int flatCount = 0;
     private int scoopCount = 0;
-
+    public int sugarCount;
     public GameObject Decoration;
 
     private void Awake()
@@ -102,10 +110,69 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void addSugarCount()
+    {
+        sugarCount++;
+    }
     public void BoilTangYuan()
     {
         boilTangYuanComplete = true;
     }
+
+    public void BoilWater()
+    {
+        waterBoiledComplete = true;
+    }
+
+    public void AddIngredients()
+    {
+        addIngredientsComplete = true;
+    }
+    public void GrindFilling()
+    {
+        grindPasteSeedsComplete = true;
+    }
+
+    public void PlacePasteOnPlate()
+    {
+        pasteOnPlateComplete = true;
+    }
+
+    public void AddHotWater()
+    {
+        addHotWaterCompelte = true;
+    }
+    
+    public void StirMixture()
+    {
+        stirMixtureComplete = true;
+    }
+
+    public void PlaceDoughOnChoppingBoard()
+    {
+        placeDoughComplete = true;
+    }
+
+    public void DivideDough()
+    {
+        cutDoughComplete = true;
+    }
+
+    public void KneadDough()
+    {
+        kneadDoughComplete = true;
+    }
+
+    public void AssembleTangYuan()
+    {
+        prepTangYuan = true;
+    }
+
+    public void ChopGinger()
+    {
+        chopGingerComplete = true;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
