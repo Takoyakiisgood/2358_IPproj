@@ -5,6 +5,7 @@ using Microsoft.MixedReality.Toolkit.UI;
 
 public class MixBowl : MonoBehaviour
 {
+    public static MixBowl instance;
     [Header("To be Assigned")]
     public GameObject[] contentArray;
 
@@ -31,6 +32,7 @@ public class MixBowl : MonoBehaviour
     private Transform startPos;
     private void Start()
     {
+        instance = this;
         //set the bowl empty first
         if (contentArray != null)
         {
@@ -60,14 +62,14 @@ public class MixBowl : MonoBehaviour
         }
         else if (other.gameObject.tag == "Flour" && GameManager.instance.currentTask == "prepDough")
         {
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
             contentArray[1].SetActive(true);
             flourInside = true;
         }
 
     }
 
-    private void Reset()
+    public void Reset()
     {
         //reset the check values
         waterInside = false;
@@ -101,7 +103,7 @@ public class MixBowl : MonoBehaviour
 
         IncreaseStir();
 
-        if (GameManager.instance.isRested())
+        if (GameManager.instance.isReseted())
         {
             if (GameManager.instance.currentTask == "prepDough")
             {
@@ -178,8 +180,6 @@ public class MixBowl : MonoBehaviour
 
                 //remove the following components from the mix bowl, to allow the player to pick up the dough
                 this.GetComponent<BoxCollider>().enabled = false;
-                this.GetComponent<NearInteractionGrabbable>().enabled = false;
-                this.GetComponent<ObjectManipulator>().enabled = false;
             }
         }
     }

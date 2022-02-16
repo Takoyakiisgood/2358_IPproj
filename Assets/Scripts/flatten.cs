@@ -13,7 +13,8 @@ public class flatten : MonoBehaviour
             if (prefab != null)
             {
                 GameObject flatDough = Instantiate(prefab, this.transform.position, Quaternion.identity);
-                Destroy(this.gameObject);
+                GameManager.instance.refFlatDough.Add(flatDough);
+                this.gameObject.SetActive(false);
                 //increase the count for flattening the Dough
                 GameManager.instance.flattenDough();
             }
@@ -23,6 +24,5 @@ public class flatten : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    
     }
 }

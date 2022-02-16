@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Spoon : MonoBehaviour
 {
+    public static Spoon instance;
     public Transform spawnPosition;
     public GameObject prefab;
     public GameObject plate;
@@ -15,6 +16,12 @@ public class Spoon : MonoBehaviour
 
     [SerializeField]
     private GameObject tableToolsParent;
+
+    private void Start()
+    {
+        instance = this;
+    }
+
     private void Update()
     {
         timer -= Time.deltaTime;
@@ -27,23 +34,27 @@ public class Spoon : MonoBehaviour
     {
         if(other.gameObject.tag == "Paste")
         {
-            if(sesameCount < 4)
+            if(GameManager.instance.hasAddButter == true)
             {
-                if (timer == 0)
+                if (sesameCount < 4)
                 {
-                    timer = 1.5f;
-                    GameObject mySpoon = Instantiate(prefab, spawnPosition.position, Quaternion.identity);
-                    GameManager.instance.scoopPaste();
-                    mySpoon.transform.parent = transform;
-                    sesameCount++;
+                    if (timer == 0)
+                    {
+                        timer = 1.5f;
+                        GameObject mySpoon = Instantiate(prefab, spawnPosition.position, Quaternion.identity);
+                        GameManager.instance.scoopPaste();
+                        mySpoon.transform.parent = transform;
+                        sesameCount++;
+                    }
+
                 }
-                
+                else if (sesameCount == 3)
+                {
+                    other.gameObject.SetActive(false);
+                    GameManager.instance.scoopPaste();
+                }
             }
-            else if (sesameCount == 4)
-            {
-                Destroy(other.gameObject);
-                GameManager.instance.scoopPaste();
-            }
+            
             
         }
 
@@ -82,4 +93,13 @@ public class Spoon : MonoBehaviour
         }
     }
 
+    public void Reset()
+    {
+        Destroy(GameObject.Find("SesameBall(Clone)"));
+        sesameCount = 0;
+        for(int i = 0; i<plateContent.Length; i++)
+        {
+            plateContent[i].SetActive(false);
+        }
+    }
 }

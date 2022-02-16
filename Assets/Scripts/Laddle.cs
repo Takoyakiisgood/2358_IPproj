@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class Laddle : MonoBehaviour
 {
+    public static Laddle instance;
     public GameObject scoopOfSoup;
     public GameObject tangYuanSoup;
     public static bool hasSoup;
     private float cooldown;
 
+    private void Start()
+    {
+        instance = this;
+    }
     private void Update()
     {
         if(cooldown > 0)
@@ -19,6 +24,7 @@ public class Laddle : MonoBehaviour
                 cooldown = 0;
             }
         }
+
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -27,7 +33,7 @@ public class Laddle : MonoBehaviour
             if(cooldown == 0)
             {
                 scoopOfSoup.SetActive(true);
-                Destroy(other.gameObject);
+                other.gameObject.SetActive(false);
                 cooldown = 3.0f;
                 hasSoup = true;
             }
@@ -39,4 +45,8 @@ public class Laddle : MonoBehaviour
         }
     }
 
+    public void Reset()
+    {
+        scoopOfSoup.SetActive(false);
+    }
 }

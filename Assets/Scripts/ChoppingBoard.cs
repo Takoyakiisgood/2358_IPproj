@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ChoppingBoard : MonoBehaviour
 {
+    public static ChoppingBoard instance;
     [Header("To be Assigned")]
     [SerializeField]
     private GameObject ChangeDough;
@@ -32,6 +33,7 @@ public class ChoppingBoard : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
         if (ChangeDough != null)
         {
             //set the dough to be inactive at first
@@ -43,7 +45,7 @@ public class ChoppingBoard : MonoBehaviour
         }
     }
 
-    private void Reset()
+    public void Reset()
     {
         //set the dough back to inactive at first
         if (ChangeDough != null)
@@ -58,7 +60,7 @@ public class ChoppingBoard : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.instance.isRested())
+        if (GameManager.instance.isReseted())
         {
             if (GameManager.instance.currentTask == "prepDough")
             {

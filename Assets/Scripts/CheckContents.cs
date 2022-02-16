@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class CheckContents : MonoBehaviour
 {
+    public static CheckContents instance;
+
     private int contentCount;
     public GameObject[] contentArray;
     public GameObject[] finalContent;
     public string[] contentName;
     private bool contentChecked;
     public bool hasChecked;
+    [SerializeField]
     private int gingerCount;
     private int tangYuanCount;
     private float timer;
@@ -20,6 +23,7 @@ public class CheckContents : MonoBehaviour
     private int sugarCount;
     private void Start()
     {
+        instance = this;
         if (gameObject.name == "mortalcontents")
         {
             pasteMaterial.SetFloat("_Smoothness", 0f);
@@ -49,105 +53,128 @@ public class CheckContents : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name == contentName[0] && GameManager.instance.isSetupComplete() && gameObject.tag != "Pot")
+        if (GameManager.instance.isSetupComplete())
         {
-            if (hasChecked == false)
+            if (other.gameObject.name == contentName[0] && GameManager.instance.currentTask == "prepFilling" && gameObject.tag != "Pot")
             {
-                contentArray[0].SetActive(true);
+                if (hasChecked == false)
+                {
+                    contentArray[0].SetActive(true);
+                    contentCount++;
+                    hasChecked = true;
+                    other.gameObject.SetActive(false);
+
+                }
+            }
+            else if (other.gameObject.name == contentName[1] && GameManager.instance.currentTask == "prepFilling" && gameObject.tag != "Pot")
+            {
+
+                contentArray[1].SetActive(true);
                 contentCount++;
-                hasChecked = true;
-                GameManager.instance.addSugarCount();
-            }
-            if (GameManager.instance.sugarCount == 2)
-            {
-                Destroy(other.gameObject);
-            }
-        }
-        else if (other.gameObject.name == contentName[1] && GameManager.instance.isSetupComplete() && gameObject.tag != "Pot")
-        {
-        
-            Destroy(other.gameObject);
-            contentArray[1].SetActive(true);
-            contentCount++;
+                other.gameObject.SetActive(false);
 
-        
-        }
-        else if (other.gameObject.name == contentName[2] && GameManager.instance.isSetupComplete() && gameObject.tag != "Pot")
-        {
-            Destroy(other.gameObject);
-            pasteMaterial.SetFloat("_Smoothness", 0.93f);
-            GameManager.instance.mixPasteWithButter();
-        }
-        
-        if (contentCount == 2 && GameManager.instance.isSetupComplete())
-        {
-            if (!contentChecked)
+            }
+            else if (other.gameObject.name == contentName[2] && GameManager.instance.currentTask == "prepFilling" && gameObject.tag != "Pot")
             {
-                for (int i = 0; i < contentArray.Length -1; i++)
-                {
-                    contentArray[i].SetActive(false);
-                }
-                contentArray[contentCount].SetActive(true);
+                other.gameObject.SetActive(false);
+                pasteMaterial.SetFloat("_Smoothness", 0.93f);
                 GameManager.instance.mixPasteWithButter();
-                contentChecked = true;
             }
 
-        }
-        else if ((other.gameObject.tag == "BrownSugar" || other.gameObject.tag == "FinalIngredients") && GameManager.instance.isSetupComplete())
-        {
-            if (other.gameObject.name == contentName[0])
+            if (contentCount == 2 && GameManager.instance.currentTask == "prepFilling")
             {
-                if (gameObject.tag == "Pot")
+                if (!contentChecked)
                 {
-                    bool hasChecked;
-                    hasChecked = false;
-                    if (!hasChecked)
+                    for (int i = 0; i < contentArray.Length - 1; i++)
                     {
-                        finalContent[0].SetActive(true);
-                        timer = 5.0f;
-                        hasChecked = true;
-                        GameManager.instance.addSugarCount();
+                        contentArray[i].SetActive(false);
                     }
-                    
-                }
-                if (GameManager.instance.sugarCount == 2)
-                {
-                    Destroy(other.gameObject);
+                    contentArray[contentCount].SetActive(true);
+                    contentChecked = true;
                 }
 
             }
-            else if (other.gameObject.name == contentName[1])
+            else if ((other.gameObject.tag == "BrownSugar" || other.gameObject.tag == "FinalIngredients") && GameManager.instance.currentTask == "prepSoup" && gameObject.name != "mortalcontents")
             {
-                Destroy(other.gameObject);
-                finalContent[1].SetActive(true);
-            }
-            else if (other.gameObject.name == contentName[2] && GameManager.instance.isSetupComplete())
-            {
-                Destroy(other.gameObject);
-                gingerCount++;
-                if (gingerCount == 1)
+                if (other.gameObject.name == contentName[0])
                 {
-                    finalContent[2].SetActive(true);
+                    if (gameObject.tag == "Pot")
+                    {
+                        bool hasChecked;
+                        hasChecked = false;
+                        if (!hasChecked)
+                        {
+                            finalContent[0].SetActive(true);
+                            timer = 5.0f;
+                            hasChecked = true;
+                            other.gameObject.SetActive(false);
+                            GameManager.instance.AddIngredients();
+                        }
+
+                    }
+
                 }
-                else if (gingerCount == 2)
+                else if (other.gameObject.name == contentName[1])
                 {
-                    finalContent[3].SetActive(true);
+                    other.gameObject.SetActive(false);
+                    finalContent[1].SetActive(true);
+                    GameManager.instance.AddIngredients();
+                }
+                else if (other.gameObject.name == contentName[2] && GameManager.instance.currentTask == "prepSoup")
+                {
+                    other.gameObject.SetActive(false);
+                    gingerCount++;
+                    if (gingerCount == 1)
+                    {
+                        finalContent[2].SetActive(true);
+                    }
+                    else if (gingerCount == 2)
+                    {
+                        gingerCount = 0;
+                        finalContent[3].SetActive(true);
+                        GameManager.instance.AddIngredients();
+                    }
+
                 }
 
             }
-            else if (other.gameObject.name == contentName[3] && GameManager.instance.isSetupComplete() && other.gameObject.tag != "Laddle")
+
+            else if (other.gameObject.name == contentName[3] && GameManager.instance.currentTask == "cookTangYuan" && other.gameObject.tag != "Laddle")
             {
                 finalContent[tangYuanCount + 4].SetActive(true);
-                Destroy(other.gameObject);
+                other.gameObject.SetActive(false);
                 tangYuanCount++;
                 if (tangYuanCount == 4)
                 {
+                    tangYuanCount = 0;
                     Debug.Log("total 4 tangyuan added");
                     StartCoroutine(BoilTangYuan(20));
                 }
+
             }
         }
         
+    
+
+    }
+
+    public void ResetStep1()
+    {
+        contentCount = 0;
+
+        for (int i = 0; i < contentArray.Length; i++)
+        {
+            contentArray[i].SetActive(false);
+
+        }
+        hasChecked = false;
+    }
+
+    public void ResetStep4()
+    {
+        gingerCount = 0;
+        waterMaterial.color = originalColor;
+
     }
     private IEnumerator BoilTangYuan(float waitTime)
     {

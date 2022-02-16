@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class GrindSequence : MonoBehaviour
 {
+    public static GrindSequence instance;
     private int grindCount;
     public GameObject[] grindArray;
 
-
+    private void Start()
+    {
+        instance = this;
+    }
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log(collision.relativeVelocity.magnitude);
@@ -50,5 +54,19 @@ public class GrindSequence : MonoBehaviour
             }
         }
         
+    }
+
+    private void Update()
+    {
+
+    }
+    public void Reset()
+    {
+        for (int i = 0; i < grindArray.Length; i++) 
+        {
+            grindArray[i].SetActive(false);
+
+        }
+        grindCount = 0;
     }
 }

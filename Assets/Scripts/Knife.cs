@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Knife : MonoBehaviour
 {
+    public static Knife instance;
     private int cutCount;
     private int sliceCount;
     public GameObject[] cutSequence;
     public GameObject[] sliceSequence;
     private float timer = 0;
 
+    private void Start()
+    {
+        instance = this;
+    }
     private void Update()
     {
         timer -= Time.deltaTime;
@@ -72,6 +77,20 @@ public class Knife : MonoBehaviour
             
         }
         
+    }
+
+    public void Reset()
+    {
+        cutCount = 0;
+    }
+    public void ResetStep4()
+    {
+        sliceCount = 0;
+        sliceSequence[1].SetActive(true);
+        sliceSequence[2].SetActive(false);
+        sliceSequence[3].SetActive(false);
+        sliceSequence[4].SetActive(true);
+        sliceSequence[0].SetActive(true);
     }
 
 }

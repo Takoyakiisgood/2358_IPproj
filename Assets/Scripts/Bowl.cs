@@ -12,6 +12,7 @@ public class Bowl : MonoBehaviour
         {
             if (Laddle.hasSoup == true)
             {
+                GameManager.instance.scoopTangYuan();
                 scoopCount++;
                 GameManager.instance.scoopTangYuan();
                 if (scoopCount == 1)
@@ -24,9 +25,29 @@ public class Bowl : MonoBehaviour
                     bowlContents[scoopCount - 1].SetActive(false);
                 }
                 Laddle.hasSoup = false;
+
             }
             
         }
     }
+    private void Update()
+    {
+        if (GameManager.instance.isReseted())
+        {
+            if (GameManager.instance.currentTask == "cookTangYuan")
+            {
+                Reset();
+                GameManager.instance.ToggleReset();
+            }
 
+        }
+    }
+    private void Reset()
+    {
+        for(int i = 0; i<bowlContents.Length; i++)
+        {
+            bowlContents[i].SetActive(false);
+        }
+        scoopCount = 0;
+    }
 }

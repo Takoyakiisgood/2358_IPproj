@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class Boiling : MonoBehaviour
 {
+    public static Boiling instance;
     public ParticleSystem[] boilContents;
     public ParticleSystem[] fireArray;
     private float timer;
     private float duration = 10f;
     private bool startBoil;
-    private bool hasOn; 
+    public bool hasOn; 
     public Animator animator;
+
+    private void Start()
+    {
+        instance = this;
+    }
     private void Update()
     {
         //Debug.Log(timer);
