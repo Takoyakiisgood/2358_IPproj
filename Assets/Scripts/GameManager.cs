@@ -207,9 +207,7 @@ public class GameManager : MonoBehaviour
         if (addIngredientsComplete)
         {
             prepSoup = true;
-        }
-
-        
+        }       
     }
     public void GrindFilling()
     {
@@ -277,5 +275,10 @@ public class GameManager : MonoBehaviour
         //Check current task
         SetCurrentTask();
         //reset the subtask bool values
+        if (isRested())
+        {
+            Debug.Log("hello");
+            ToggleReset();
+        }
     }
 }
