@@ -28,6 +28,7 @@ public class MixBowl : MonoBehaviour
     [SerializeField]
     private GameObject tableObject;
 
+    private Transform startPos;
     private void Start()
     {
         //set the bowl empty first
@@ -38,7 +39,9 @@ public class MixBowl : MonoBehaviour
                 contentArray[i].SetActive(false);
             }
         }
-        
+
+        //store the current position of the bowl
+        startPos = this.transform;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -46,22 +49,46 @@ public class MixBowl : MonoBehaviour
         //Debug.Log(other.gameObject.name + " is collided");
         //Check if the content needed is the correct item,
         //if yes, destroy the collider object && set it to appear on the mixing bowl
-        if (other.gameObject.tag == "Water" && GameManager.instance.isSetupComplete())
+        if (other.gameObject.tag == "Water" && GameManager.instance.currentTask == "prepDough")
         {
-            Destroy(other.gameObject);
-            contentArray[0].SetActive(true);
+            other.gameObject.SetActive(false);//waterbowl
+            contentArray[0].SetActive(true);//water content inside water
             waterInside = true;
 
             //Update sub task
             GameManager.instance.AddHotWater();
         }
-        else if (other.gameObject.tag == "Flour" && GameManager.instance.isSetupComplete())
+        else if (other.gameObject.tag == "Flour" && GameManager.instance.currentTask == "prepDough")
         {
             Destroy(other.gameObject);
             contentArray[1].SetActive(true);
             flourInside = true;
         }
 
+    }
+
+    private void Reset()
+    {
+        //reset the check values
+        waterInside = false;
+        flourInside = false;
+        Count = 0;
+        point1 = false;
+        point2 = false;
+        stirDone = false;
+        mixtureInside = false;
+
+        //set the bowl empty 
+        if (contentArray != null)
+        {
+            for (int i = 0; i < contentArray.Length; i++)
+            {
+                contentArray[i].SetActive(false);
+            }
+        }
+
+        //set the dough back to mixbowl parent
+        contentArray[2].transform.parent = this.transform;
     }
 
     private void Update()
@@ -73,6 +100,18 @@ public class MixBowl : MonoBehaviour
         }
 
         IncreaseStir();
+
+        if (GameManager.instance.isRested())
+        {
+            if (GameManager.instance.currentTask == "prepDough")
+            {
+                //reset the mix bowl interaction
+                Reset();
+
+                //set the reset back to false
+                GameManager.instance.ToggleReset();
+            }
+        }
     }
 
     public void SetPoint1()
@@ -126,9 +165,9 @@ public class MixBowl : MonoBehaviour
                 //display the flour Dough
                 //and set the before mixed ingredients to disappear
                 if (contentArray != null) {
-                    Destroy(contentArray[0]); //Water
-                    Destroy(contentArray[1]); //Flour
-                    contentArray[2].SetActive(true);
+                    contentArray[0].SetActive(false);//Water
+                    contentArray[1].SetActive(false);//Flour
+                    contentArray[2].SetActive(true);//Dough
 
                     //detach parent of dough from mixbowl to tabletools
                     contentArray[2].transform.parent = tableObject.transform;

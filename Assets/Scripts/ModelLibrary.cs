@@ -92,8 +92,8 @@ public class ModelLibrary : MonoBehaviour
             //after the setup is done, set the collider to inactive. This is done to not affect the interactable assets from being selected
             SetupAsset[i].GetComponent<BoxCollider>().enabled = false;            
         }
-
     }
+
     /// Function to reset the transforms of this object
     /// </summary>
     public void ResetTransforms()
@@ -103,6 +103,5 @@ public class ModelLibrary : MonoBehaviour
             InteractableAsset[i].transform.position = originalPosition[i];
             InteractableAsset[i].transform.rotation = originalRotation[i];
         }
-    }
-    
+    }   
 }

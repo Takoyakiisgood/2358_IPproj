@@ -9,7 +9,8 @@ public class PointChecker : MonoBehaviour
         //Debug.Log(other.gameObject.name + " is collided");
         //Check if the collided Object inside is a Spoon
         if (other.gameObject.name == "Spoon")
-        {          
+        {
+            //if(other.gameObject.name == )
             if (this.name == "Point1")
             {
                 this.GetComponentInParent<MixBowl>().SetPoint1();

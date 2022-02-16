@@ -15,11 +15,13 @@ Date Created: 11/02/2022
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    [Header("Check Task Complete")]
+    public string currentTask;
 
     private bool setUpComplete;
-
-    [Header("Check Task Complete")]
     [SerializeField]
+    private bool reseted;
+
     private bool flattenDoughComplete;
     private bool cutDoughComplete;
     private bool grindProcessComplete;
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour
     private int scoopTangYuanCount = 0;
     public GameObject Decoration;
 
+
     private void Awake()
     {
         instance = this;
@@ -56,13 +59,61 @@ public class GameManager : MonoBehaviour
     {
         if (!setUpComplete)
         {
-            setUpComplete = true;
+            setUpComplete = true;            
+        }
+    }
+
+    public void SetCurrentTask()
+    {
+        if (setUpComplete)
+        {
+            if (!prepFilling && !prepDough && !prepTangYuan && !prepSoup && !cookTangYuan)
+            {
+                currentTask = "prepFilling";
+            }
+            else if (prepFilling && !prepDough && !prepTangYuan && !prepSoup && !cookTangYuan)
+            {
+                currentTask = "prepDough";
+            }
+            else if (prepFilling && prepDough && !prepTangYuan && !prepSoup && !cookTangYuan)
+            {
+                currentTask = "prepTangYuan";
+            }
+            else if (prepFilling && prepDough && prepTangYuan && !prepSoup && !cookTangYuan)
+            {
+                currentTask = "prepSoup";
+            }
+            else if (prepFilling && prepDough && prepTangYuan && prepSoup && !cookTangYuan)
+            {
+                currentTask = "cookTangYuan";
+            }
+            else
+            {
+                currentTask = "completed";
+            }
         }
     }
 
     public bool isSetupComplete()
     {
         return setUpComplete;
+    }
+
+    public bool isRested()
+    {
+        return reseted;
+    }
+
+    public void ToggleReset()
+    {
+        if (!reseted)
+        {
+            reseted = !reseted; //true
+        }
+        else
+        {
+            reseted = false;
+        }
     }
 
     public void flattenDough() 
@@ -208,6 +259,12 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    private void Reset()
+    {
+        
+         
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -217,6 +274,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Check current task
+        SetCurrentTask();
+        //reset the subtask bool values
     }
 }

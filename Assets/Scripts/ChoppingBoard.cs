@@ -15,8 +15,8 @@ public class ChoppingBoard : MonoBehaviour
         {
             if (ChangeDough != null)
             {
-                //destroy the current dough and change it to the assigned dough
-                Destroy(other.gameObject);
+                //set the current dough inactive and change it to the assigned dough
+                other.gameObject.SetActive(false);
                 ChangeDough.SetActive(true);
 
                 //Update sub task
@@ -43,4 +43,31 @@ public class ChoppingBoard : MonoBehaviour
         }
     }
 
+    private void Reset()
+    {
+        //set the dough back to inactive at first
+        if (ChangeDough != null)
+        {
+            ChangeDough.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("Change Dough game object is not assigned!");
+        }
+    }
+
+    private void Update()
+    {
+        if (GameManager.instance.isRested())
+        {
+            if (GameManager.instance.currentTask == "prepDough")
+            {
+                //reset the mix bowl interaction
+                Reset();
+
+                //set the reset back to false
+                GameManager.instance.ToggleReset();
+            }
+        }
+    }
 }
