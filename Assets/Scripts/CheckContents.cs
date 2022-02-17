@@ -139,19 +139,26 @@ public class CheckContents : MonoBehaviour
 
             }
 
-            else if (other.gameObject.name == contentName[3] && GameManager.instance.currentTask == "cookTangYuan" && other.gameObject.tag != "Laddle")
-            {
-                finalContent[tangYuanCount + 4].SetActive(true);
-                other.gameObject.SetActive(false);
-                tangYuanCount++;
-                if (tangYuanCount == 4)
+           else if (GameManager.instance.currentTask == "cookTangYuan" && other.gameObject.tag != "Laddle" && gameObject.name != "mortalcontents")
+           {
+                if (contentName[3] != null)
                 {
-                    tangYuanCount = 0;
-                    Debug.Log("total 4 tangyuan added");
-                    StartCoroutine(BoilTangYuan(20));
+                    if(other.gameObject.name == contentName[3])
+                    {
+                        finalContent[tangYuanCount + 4].SetActive(true);
+                        other.gameObject.SetActive(false);
+                        tangYuanCount++;
+                        if (tangYuanCount == 4)
+                        {
+                            tangYuanCount = 0;
+                            Debug.Log("total 4 tangyuan added");
+                            StartCoroutine(BoilTangYuan(20));
+                        }
+                    }
                 }
-
-            }
+               
+           
+           }
         }
         
     

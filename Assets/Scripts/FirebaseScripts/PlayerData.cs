@@ -31,7 +31,7 @@ public class PlayerData : MonoBehaviour
 
     private string getLocalId;
 
-
+    
     private void Start()
     {
         //playerScore = random.Next(0, 101);
@@ -50,9 +50,9 @@ public class PlayerData : MonoBehaviour
         PostToDatabase();
     }
 
-    private void UpdateScore()
+    private void UpdateRecipe()
     {
-        scoreText.text = "Score: " + user.userScore;
+       // scoreText.text = "Score: " + recipe.part1.ToString();
     }
 
     private void PostToDatabase(bool emptyScore = false)
@@ -69,10 +69,9 @@ public class PlayerData : MonoBehaviour
 
     private void RetrieveFromDatabase()
     {
-        RestClient.Get<User>(databaseURL + "/" + getLocalId + ".json?auth=" + idToken).Then(response =>
+        RestClient.Get<Recipe>(databaseURL + "/" + "recipe/chineseCulture/1/instructions" + ".json?auth=").Then(response =>
         {
-            user = response;
-            UpdateScore();
+            //recipe = response;
         });
     }
 

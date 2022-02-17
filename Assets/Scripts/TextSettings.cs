@@ -33,9 +33,9 @@ public class TextSettings : MonoBehaviour
     private int minTextSize = 12;
 
     [Header("Tracking")]
-    [SerializeField]
-    private int maxTrack = 30;
-    [SerializeField]
+    //[SerializeField]
+    private int maxTrack;
+    //[SerializeField]
     private int minTrack = 0;
 
     [Header("Current Size")]
@@ -70,6 +70,8 @@ public class TextSettings : MonoBehaviour
 
     public void IncreaseTxtSize()
     {
+        //reset back the tracking so it does not go beyond the maximum
+        currentTrackSize = 0;
         //increase the current size
         currentTxtSize++;
         //make sure the size does not go beyond the max size
@@ -102,6 +104,19 @@ public class TextSettings : MonoBehaviour
 
     public void IncreaseTracking()
     {
+        if (currentTxtSize == 9)
+        {
+            maxTrack = 18;
+        }
+        else if (currentTxtSize == 10)
+        {
+            maxTrack = 10;
+        }
+        else if (currentTxtSize == 11)
+        {
+            maxTrack = 6;
+        }
+
         //increase the current track
         currentTrackSize++;
         //make sure the size does not go beyond the max size
@@ -157,5 +172,13 @@ public class TextSettings : MonoBehaviour
                 txtObj[i].characterSpacing = track;
             }
         }
+    }
+
+    private void Update()
+    {
+        //Assign back the number to the label
+        TrackingObj.GetComponent<TMP_Text>().text = currentTrackSize.ToString();
+        //Assign back the number to the label
+        fontSizeObj.GetComponent<TMP_Text>().text = currentTxtSize.ToString();
     }
 }

@@ -55,7 +55,6 @@ public class GameManager : MonoBehaviour
     public List<GameObject> refFlatDough;
     public List<GameObject> refTangYuan;
     public List<Vector3> refTangYuanPos;
-    public GameObject[] tangYuanArray;
     private void Awake()
     {
         instance = this;
@@ -384,8 +383,5 @@ public class GameManager : MonoBehaviour
             Reset();
             
         }
-
-        text1.text = "Current Task: " + currentTask;
-        text2.text = "Reset: " + reseted;
     }
 }
