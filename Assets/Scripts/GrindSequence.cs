@@ -1,16 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Microsoft.MixedReality.Toolkit.UI;
 public class GrindSequence : MonoBehaviour
 {
     public static GrindSequence instance;
     private int grindCount;
     public GameObject[] grindArray;
+    public GameObject feedbackTip;
 
     private void Start()
     {
         instance = this;
+    }
+
+    private IEnumerator WaitForSecs(float duration)
+    {
+        yield return new WaitForSeconds(duration);
     }
     void OnCollisionEnter(Collision collision)
     {
@@ -46,11 +52,21 @@ public class GrindSequence : MonoBehaviour
             else if (collision.relativeVelocity.magnitude < 0.5)
             {
                 Debug.Log("Too little force!");
+                feedbackTip.SetActive(true);
+                GameManager.instance.makeMistakes();
+                feedbackTip.GetComponent<ToolTip>().ToolTipText = "Too little force!";
+                WaitForSecs(1.5f);
+                feedbackTip.SetActive(false);
 
             }
             else if (collision.relativeVelocity.magnitude > 2)
             {
                 Debug.Log("Too much force!");
+                feedbackTip.SetActive(true);
+                GameManager.instance.makeMistakes();
+                feedbackTip.GetComponent<ToolTip>().ToolTipText = "Too much force!";
+                WaitForSecs(1.5f);
+                feedbackTip.SetActive(false);
             }
         }
         

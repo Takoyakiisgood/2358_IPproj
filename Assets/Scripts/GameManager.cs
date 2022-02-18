@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Microsoft.MixedReality.Toolkit.UI;
 /******************************************************************************
 Author: Ng Hui Ling, Jordan Yeo Xiang Yu
 
@@ -21,6 +22,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI text1;
     public TextMeshProUGUI text2;
     private bool setUpComplete;
+    [SerializeField]
+    private int mistakes;
     [SerializeField]
     private bool reseted;
 
@@ -44,6 +47,9 @@ public class GameManager : MonoBehaviour
     //Main Task
     private bool prepFilling, prepDough, prepTangYuan, prepSoup, cookTangYuan;
 
+    public bool isCompleted;
+    public GameObject gameCompleteUI;
+    public UiLibrary uiLibrary;
     [SerializeField]
     private int flatCount = 0;
     private int scoopCount = 0;
@@ -51,13 +57,41 @@ public class GameManager : MonoBehaviour
     private int finalIngredients = 0;
     private int scoopTangYuanCount = 0;
 
-
     public List<GameObject> refFlatDough;
     public List<GameObject> refTangYuan;
     public List<Vector3> refTangYuanPos;
+
+    public List<string> step1List;
+    public List<string> step2List;
+    public List<string> step3List;
+    public List<string> step4List;
+    public List<string> step5List;
+    public TextMeshProUGUI[] taskListGUI;
+
+    public TextMeshProUGUI stepText;
+
+
     private void Awake()
     {
         instance = this;
+       //step1List.Add("1. Grind cooled sesame seeds and sugar until they turn into a paste texture.");
+       //step1List.Add("2. Mix the black sesame paste with butter.");
+       //step1List.Add("3. Scoop the paste 4 times with a spoon to form paste balls and place them on an empty plate.");
+
+        //step2List.Add("1. In a mixing bowl, pour water into glutinous rice flour.");
+        //step2List.Add("2. Stir the mixture with a spoon 3 times in a clock-wise direction to form a dough.");
+        //step2List.Add("3. Place the dough onto the chopping board.");
+        //step2List.Add("4. Cut the dough using a knife to divide it into 4 balls.");
+        //step2List.Add("5. On the chopping board, use the rolling pin and knead the dough until a smooth, soft flattened dough forms.");
+
+        //step3List.Add("1. Place a ball of filling in the middle of a flattened dough to form the Tang Yuan. Repeat until you have all 4 Tang Yuan.");
+
+        //step4List.Add("1.Cut the ginger into thin slices using a knife. You will need only 2 slices.");
+        //step4List.Add("2. Boil a large pot of water on the portable gas stove.");
+        //step4List.Add("3. Add brown sugar, pandan leaves and the ginger slices into the water");
+
+        //step5List.Add("1. Put the Tang Yuan into the pot with the sweet soup and boil it for 10 seconds.");
+        //step5List.Add("2. Dish out the Tangyuan along with some sweet soup into an empty bowl. Repeat until the empty bowl contains 4 Tang Yuan.");
     }
 
     public void SetupComplete()
@@ -68,33 +102,84 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void makeMistakes()
+    {
+        mistakes++;
+    }
+
+    public void TasklistReset()
+    {
+        if (taskListGUI != null)
+        {
+            for (int i = 0; i < taskListGUI.Length; i++)
+            {
+                taskListGUI[i].gameObject.SetActive(false);
+            }
+        }
+        
+    }
+
     public void SetCurrentTask()
     {
         if (setUpComplete)
         {
+            //set the tasklist to inactive first
+            TasklistReset();
             if (!prepFilling && !prepDough && !prepTangYuan && !prepSoup && !cookTangYuan)
             {
                 currentTask = "prepFilling";
+                stepText.text = "Step 1: " + currentTask;
+
+                for (int i = 0; i < step1List.Count; i++)
+                {
+                    taskListGUI[i].text = step1List[i];
+                    taskListGUI[i].gameObject.SetActive(true);
+                }
             }
             else if (prepFilling && !prepDough && !prepTangYuan && !prepSoup && !cookTangYuan)
             {
                 currentTask = "prepDough";
+                stepText.text = "Step 2: " + currentTask;
+                for (int i = 0; i < step2List.Count; i++)
+                {
+                    taskListGUI[i].text = step2List[i];
+                    taskListGUI[i].gameObject.SetActive(true);
+                }
             }
             else if (prepFilling && prepDough && !prepTangYuan && !prepSoup && !cookTangYuan)
             {
                 currentTask = "prepTangYuan";
+                stepText.text = "Step 3: " + currentTask;
+                for (int i = 0; i < step3List.Count; i++)
+                {
+                    taskListGUI[i].text = step3List[i];
+                    taskListGUI[i].gameObject.SetActive(true);
+                }
             }
             else if (prepFilling && prepDough && prepTangYuan && !prepSoup && !cookTangYuan)
             {
                 currentTask = "prepSoup";
+                stepText.text = "Step 4: " + currentTask;
+                for (int i = 0; i < step4List.Count; i++)
+                {
+                    taskListGUI[i].text = step4List[i];
+                    taskListGUI[i].gameObject.SetActive(true);
+                }
             }
             else if (prepFilling && prepDough && prepTangYuan && prepSoup && !cookTangYuan)
             {
                 currentTask = "cookTangYuan";
+                stepText.text = "Step 5: " + currentTask;
+                for (int i = 0; i < step5List.Count; i++)
+                {
+                    taskListGUI[i].text = step5List[i];
+                    taskListGUI[i].gameObject.SetActive(true);
+                }
             }
             else
             {
                 currentTask = "completed";
+                               
             }
         }
     }
@@ -135,6 +220,11 @@ public class GameManager : MonoBehaviour
                 {
                     //mark task as done
                     prepDough = true;
+                    if (taskListGUI != null)
+                    {
+                        taskListGUI[4].fontStyle = FontStyles.Strikethrough;
+                        resetStyle();
+                    }
                 }
             }
         }
@@ -142,19 +232,45 @@ public class GameManager : MonoBehaviour
         
 
     }
+
+    public void resetStyle()
+    {
+        if (taskListGUI != null)
+        {
+            for (int i = 0; i < taskListGUI.Length; i++)
+            {
+                taskListGUI[i].fontStyle = FontStyles.Normal;
+            }
+            
+        }
+    }
+
     public void cutDough()
     {
         cutDoughComplete = true;
+        if (taskListGUI != null)
+        {
+            taskListGUI[3].fontStyle = FontStyles.Strikethrough;
+        }
     }
     public void grindProcess()
     {
         grindProcessComplete = true;
+        if (taskListGUI != null)
+        {
+            taskListGUI[0].fontStyle = FontStyles.Strikethrough;
+        }
+
     }
 
     public void mixPasteWithButter()
     {
         mixingProcessComplete = true;
         hasAddButter = mixingProcessComplete;
+        if (taskListGUI != null)
+        {
+            taskListGUI[1].fontStyle = FontStyles.Strikethrough;
+        }
     }
 
     public void scoopPaste()
@@ -167,13 +283,13 @@ public class GameManager : MonoBehaviour
             if (scoopCount == 4)
             {
                 scoopPasteComplete = true;
+                if (taskListGUI != null)
+                {
+                    taskListGUI[2].fontStyle = FontStyles.Strikethrough;
+                }
             }
         }
-        else
-        {
-            //mark task as done        
-            
-        }
+       
     }
     public void scoopTangYuan()
     {
@@ -189,6 +305,12 @@ public class GameManager : MonoBehaviour
                 {
                     //mark task as done        
                     cookTangYuan = true;
+                    if (taskListGUI != null)
+                    {
+                        taskListGUI[1].fontStyle = FontStyles.Strikethrough;
+                        resetStyle();
+                        isCompleted = true;
+                    }
                 }
             }
         }
@@ -197,11 +319,25 @@ public class GameManager : MonoBehaviour
     public void BoilTangYuan()
     {
         boilTangYuanComplete = true;
+        if (taskListGUI != null)
+        {
+            taskListGUI[0].fontStyle = FontStyles.Strikethrough;
+        }
+
     }
 
     public void BoilWater()
     {
         waterBoiledComplete = true;
+        if (taskListGUI != null)
+        {
+            taskListGUI[1].fontStyle = FontStyles.Strikethrough;
+        }
+        if (addIngredientsComplete == true && chopGingerComplete == true && waterBoiledComplete == true)
+        {
+            prepSoup = true;
+            resetStyle();
+        }
     }
 
     public void AddIngredients()
@@ -210,10 +346,15 @@ public class GameManager : MonoBehaviour
         if(finalIngredients == 3)
         {
             addIngredientsComplete = true;
+            if (taskListGUI != null)
+            {
+                taskListGUI[0].fontStyle = FontStyles.Strikethrough;
+            }
         }
         if (addIngredientsComplete == true && chopGingerComplete == true && waterBoiledComplete == true)
         {
             prepSoup = true;
+            resetStyle();
         }
 
         
@@ -226,6 +367,11 @@ public class GameManager : MonoBehaviour
         if (grindProcessComplete == true && mixingProcessComplete == true && scoopPasteComplete == true && pasteOnPlateComplete == true)
         {
             prepFilling = true;
+            if (taskListGUI != null)
+            {
+                taskListGUI[3].fontStyle = FontStyles.Strikethrough;
+                resetStyle();
+            }
         }
         
     }
@@ -233,21 +379,37 @@ public class GameManager : MonoBehaviour
     public void AddHotWater()
     {
         addMixtureComplete = true;
+        if (taskListGUI != null)
+        {
+            taskListGUI[0].fontStyle = FontStyles.Strikethrough;
+        }
     }
     
     public void StirMixture()
     {
         stirMixtureComplete = true;
+        if (taskListGUI != null)
+        {
+            taskListGUI[1].fontStyle = FontStyles.Strikethrough;
+        }
     }
 
     public void PlaceDoughOnChoppingBoard()
     {
         placeDoughComplete = true;
+        if (taskListGUI != null)
+        {
+            taskListGUI[2].fontStyle = FontStyles.Strikethrough;
+        }
     }
 
     public void DivideDough()
     {
         cutDoughComplete = true;
+        if (taskListGUI != null)
+        {
+            taskListGUI[3].fontStyle = FontStyles.Strikethrough;
+        }
     }
 
     public void AssembleTangYuan()
@@ -256,21 +418,44 @@ public class GameManager : MonoBehaviour
         if(tangYuanCount == 4)
         {
             prepTangYuan = true;
+            if (taskListGUI != null)
+            {
+                taskListGUI[0].fontStyle = FontStyles.Strikethrough;
+                resetStyle();
+            }
         }
     }
 
     public void ChopGinger()
     {
         chopGingerComplete = true;
+        if (taskListGUI != null)
+        {
+            taskListGUI[0].fontStyle = FontStyles.Strikethrough;
+        }
+        if (addIngredientsComplete == true && chopGingerComplete == true && waterBoiledComplete == true)
+        {
+            prepSoup = true;
+            resetStyle();
+        }
     }
 
     public void QuitGame()
     {
+        //set to the database if the set did/did not complete the game
+        float timeTaken = TimeManager.Instance.GetCurrentSec();
+        PlayerData.instance.SetChineseCulturalStats(timeTaken, mistakes, isCompleted);
         Application.Quit();
     }
 
     private void Reset()
     {
+        //reset the UI pos
+        uiLibrary.Reset();
+
+        //reset the strikethrough
+        resetStyle();
+
         if (currentTask == "prepFilling")
         {
             prepFilling = false;
@@ -285,7 +470,7 @@ public class GameManager : MonoBehaviour
 
             hasAddButter = false;
             GrindSequence.instance.Reset();
-            CheckContents.instance.ResetStep1();
+            Mortal.instance.ResetStep1();
             Spoon.instance.Reset();
             GetComponent<ModelLibrary>().ResetTransforms();
             ToggleReset();
@@ -334,6 +519,8 @@ public class GameManager : MonoBehaviour
                 
             }
 
+            ToggleReset();
+
         }
         else if (currentTask == "prepSoup")
         {
@@ -348,6 +535,7 @@ public class GameManager : MonoBehaviour
             CheckContents.instance.ResetStep4();
             Knife.instance.ResetStep4();
             Boiling.instance.StartFire();
+            ToggleReset();
         }
         else if (currentTask == "cookTangYuan")
         {
@@ -363,8 +551,14 @@ public class GameManager : MonoBehaviour
                 refTangYuan[i].transform.position = refTangYuanPos[i];
             }
             Laddle.instance.Reset();
+            ToggleReset();
         }
          
+    }
+    private IEnumerator WaitForSecs(float duration, float timeTaken)
+    {
+        yield return new WaitForSeconds(duration);
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -375,13 +569,35 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Check current task
-        SetCurrentTask();
         //reset the subtask bool values
         if (isReseted())
         {
             Reset();
             
+        }
+
+        if (isCompleted)
+        {
+            uiLibrary.HideAllPages();
+            gameCompleteUI.SetActive(true);
+           
+            gameCompleteUI.GetComponent<FollowMeToggle>().ToggleFollowMeBehavior();
+            float timeTaken = TimeManager.Instance.GetCurrentSec();
+            
+            PlayerData.instance.SetChineseCulturalStats(timeTaken, mistakes, isCompleted);
+            PlayerData.instance.SetPlayerStats(timeTaken, mistakes);
+
+
+            //reset the whole game
+            mistakes = 0;
+            isCompleted = false;
+            setUpComplete = false;
+            this.GetComponent<ModelLibrary>().resetGame();
+        }
+        else
+        {
+            //Check current task
+            SetCurrentTask();
         }
     }
 }

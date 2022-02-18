@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-    public Text timeDisplay;
 
     private float time = 0;
     private float sec;
@@ -16,6 +15,7 @@ public class TimeManager : MonoBehaviour
     void Start()
     {
         StartTimer();
+        Instance = this;
     }
 
     // Update is called once per frame
@@ -39,7 +39,7 @@ public class TimeManager : MonoBehaviour
         float min = Mathf.FloorToInt(time / 60);
         float sec = Mathf.FloorToInt(time % 60);
 
-        timeDisplay.text = "TIME: " + string.Format("{0:00}:{1:00}", min, sec);
+        //timeDisplay.text = "TIME: " + string.Format("{0:00}:{1:00}", min, sec);
     }
 
     public void StartTimer()

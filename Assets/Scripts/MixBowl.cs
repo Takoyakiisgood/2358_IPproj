@@ -2,6 +2,7 @@
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using System.Collections;
 
 public class MixBowl : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class MixBowl : MonoBehaviour
     private GameObject tableObject;
 
     private Transform startPos;
+
+    public GameObject feedbackTip;
     private void Start()
     {
         instance = this;
@@ -116,6 +119,10 @@ public class MixBowl : MonoBehaviour
         }
     }
 
+    private IEnumerator WaitForSecs(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+    }
     public void SetPoint1()
     {
         //check if the mixture is inside before the user can stir 
@@ -138,11 +145,18 @@ public class MixBowl : MonoBehaviour
             if (point1 && !point2 && !stirDone)
             {
                 point2 = true;
+
             }
             else
             {
                 //display error message
                 Debug.Log("Stir it in a clockwise manner");
+                //add the mistakes count
+                GameManager.instance.makeMistakes();
+                feedbackTip.SetActive(true);
+                feedbackTip.GetComponent<ToolTip>().ToolTipText = "Stir it in a clockwise manner";
+                WaitForSecs(1.5f);
+                feedbackTip.SetActive(false);
                 //Reset the points
                 point1 = false;
                 point2 = false;

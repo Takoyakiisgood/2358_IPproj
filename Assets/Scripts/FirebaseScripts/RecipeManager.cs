@@ -17,31 +17,28 @@ using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.UI;
 using Proyecto26;
-
 public class RecipeManager : MonoBehaviour
 {
     public static RecipeManager Instance;
 
-    //All Player Data
-    public Text joinedDate;
-    public Text lastLoggedIn;
-    public Text timePlayed;
-    private string databaseURL = "https://mesakanharmoni-default-rtdb.asia-southeast1.firebasedatabase.app/players/";
 
-    public TextMeshProUGUI recipeText;
-    private string sceneName;
+    private string databaseURL = "https://mesakanharmoni-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
-    Recipe recipe = new Recipe();
+
+
+
+    Dictionary<string, object> step1 = new Dictionary<string, object>();
+
     private void Awake()
     {
         Instance = this;
+        RetrieveFromDatabase();
     }
     /// <summary>
     /// Check current game scene and check if user is logged in.
     /// </summary>
     void Start()
     {
-        RetrieveFromDatabase();
         
         //Scene currentScene = SceneManager.GetActiveScene();
         //sceneName = currentScene.name;
@@ -62,11 +59,44 @@ public class RecipeManager : MonoBehaviour
     /// </summary>
     private void RetrieveFromDatabase()
     {
-        RestClient.Get<Recipe>(databaseURL + "recipe/chineseCulture/1/instructions" + ".json?auth=").Then(response =>
+        RestClient.Get<Recipe>(databaseURL + "recipe/chineseCulture/1/instructions/step1.json").Then(response =>
         {
-            recipe = response;
-            Debug.Log(recipe.part1);
-            UpdateRecipe();
+
+            Recipe recipe = response;
+            GameManager.instance.step1List.Add(recipe.part1);
+            GameManager.instance.step1List.Add(recipe.part2);
+            GameManager.instance.step1List.Add(recipe.part3);
+        });
+        RestClient.Get<Recipe>(databaseURL + "recipe/chineseCulture/1/instructions/step2.json").Then(response =>
+        {
+
+            Recipe recipe = response;
+            GameManager.instance.step2List.Add(recipe.part1);
+            GameManager.instance.step2List.Add(recipe.part2);
+            GameManager.instance.step2List.Add(recipe.part3);
+            GameManager.instance.step2List.Add(recipe.part4);
+            GameManager.instance.step2List.Add(recipe.part5);
+        });
+        RestClient.Get<Recipe>(databaseURL + "recipe/chineseCulture/1/instructions/step3.json").Then(response =>
+        {
+
+            Recipe recipe = response;
+            GameManager.instance.step3List.Add(recipe.part1);
+        });
+        RestClient.Get<Recipe>(databaseURL + "recipe/chineseCulture/1/instructions/step4.json").Then(response =>
+        {
+
+            Recipe recipe = response;
+            GameManager.instance.step4List.Add(recipe.part1);
+            GameManager.instance.step4List.Add(recipe.part2);
+            GameManager.instance.step4List.Add(recipe.part3);
+        });
+        RestClient.Get<Recipe>(databaseURL + "recipe/chineseCulture/1/instructions/step5.json").Then(response =>
+        {
+
+            Recipe recipe = response;
+            GameManager.instance.step5List.Add(recipe.part1);
+            GameManager.instance.step5List.Add(recipe.part2);
         });
     }
 

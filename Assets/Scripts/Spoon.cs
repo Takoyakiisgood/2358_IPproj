@@ -36,7 +36,7 @@ public class Spoon : MonoBehaviour
         {
             if(GameManager.instance.hasAddButter == true)
             {
-                if (sesameCount < 4)
+                if (sesameCount < 5)
                 {
                     if (timer == 0)
                     {
@@ -45,13 +45,13 @@ public class Spoon : MonoBehaviour
                         GameManager.instance.scoopPaste();
                         mySpoon.transform.parent = transform;
                         sesameCount++;
+                        if (sesameCount == 4)
+                        {
+                            other.gameObject.SetActive(false);
+                            GameManager.instance.scoopPaste();
+                        }
                     }
 
-                }
-                else if (sesameCount == 3)
-                {
-                    other.gameObject.SetActive(false);
-                    GameManager.instance.scoopPaste();
                 }
             }
             

@@ -5,39 +5,54 @@ using Proyecto26;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using TMPro;
+using System.Text.RegularExpressions;
 
 public class PlayerData : MonoBehaviour
 {
-    public Text scoreText;
-    public InputField getScoreText;
+    public static PlayerData instance;
+    //Login variables
+    [Header("Login")]
+    public TMP_InputField L_tbEmail;
+    public TMP_InputField L_tbPswd;
+    public TMP_Text L_errorMsg;
 
-    public InputField emailText;
-    public InputField usernameText;
-    public InputField passwordText;
+    //SignUp variables
+    [Header("SignUp")]
+    public TMP_InputField S_tbEmail;
+    public TMP_InputField S_tbUsername;
+    public TMP_InputField S_tbPswd;
+    public TMP_Text S_errorMsg;
 
     private System.Random random = new System.Random();
 
     User user = new User();
-
+    playerStats playerStats = new playerStats();
+    chineseCultureStats chineseCultureStats = new chineseCultureStats();
     private string databaseURL = "https://mesakanharmoni-default-rtdb.asia-southeast1.firebasedatabase.app/players/";
+    private string playerStatsURL = "https://mesakanharmoni-default-rtdb.asia-southeast1.firebasedatabase.app/playerStats/";
+    private string chineseCultureStatsURL = "https://mesakanharmoni-default-rtdb.asia-southeast1.firebasedatabase.app/chineseCultureStats/";
     private string AuthKey = "AIzaSyAypqI1GuYE9cqqU_Zd6SUsi7daiiomt1s";
 
     public static int playerScore;
     public static string playerName;
-
+    [SerializeField]
     private string idToken;
 
-    public static string localId;
+    public string localId;
 
     private string getLocalId;
 
-    
+    public GameObject menuUI;
+    public GameObject loginUI;
+    public GameObject signUpUI;
+
+    public bool attempted;
     private void Start()
     {
-        //playerScore = random.Next(0, 101);
-        //scoreText.text = "Score: " + playerScore;
-        Debug.Log("hello");
-        SignUpUserButton();
+        instance = this;
+        L_errorMsg.text = "";
+        S_errorMsg.text = "";
 
     }
 
@@ -45,65 +60,200 @@ public class PlayerData : MonoBehaviour
     {
         
     }
-    public void OnSubmit()
+
+    private void PostToDatabase(string email, string username)
     {
-        PostToDatabase();
-    }
-
-    private void UpdateRecipe()
-    {
-       // scoreText.text = "Score: " + recipe.part1.ToString();
-    }
-
-    private void PostToDatabase(bool emptyScore = false)
-    {
-        User user = new User();
-
-        if (emptyScore)
-        {
-            user.userScore = 0;
-        }
-
+        
+        user.userName = username;
+        user.email = email;
+        user.cultural = null;
+        user.food = null;
+        user.active = true;
+        user.pfp = 1;
+        user.lastLoggedIn = user.GetTimeUnix();
+        user.createdOn = user.GetTimeUnix();
+        user.updatedOn = user.GetTimeUnix();
         RestClient.Put(databaseURL + "/" + localId + ".json?auth=" + idToken, user);
     }
 
-    private void RetrieveFromDatabase()
+    private void PostToPlayerStatsDatabase()
     {
-        RestClient.Get<Recipe>(databaseURL + "/" + "recipe/chineseCulture/1/instructions" + ".json?auth=").Then(response =>
+        playerStats.chineseCultureTimeTaken = 0;
+        playerStats.eurasianCultureTimeTaken = 0;
+        playerStats.indianCultureTimeTaken = 0;
+        playerStats.malayCultureTimeTaken = 0;
+        playerStats.username = user.userName;
+        playerStats.dishesCompletedChinese = 0;
+        playerStats.dishesCompletedEurasian = 0;
+        playerStats.dishesCompletedIndian = 0;
+        playerStats.dishesCompletedMalay = 0;
+        playerStats.totalMistakesMade = 0;
+        playerStats.createdOn = playerStats.GetTimeUnix();
+        playerStats.updatedOn = playerStats.GetTimeUnix();
+        RestClient.Put(playerStatsURL + "/" + localId + ".json?auth=" + idToken, playerStats);
+    }
+    private void PostToChineseCultureStatsDatabase()
+    {
+        chineseCultureStats.totalTimeTaken = 0;
+        chineseCultureStats.completed = false;
+        chineseCultureStats.mistakesMade = 0;
+        chineseCultureStats.createdOn = chineseCultureStats.GetTimeUnix();
+        chineseCultureStats.updatedOn = chineseCultureStats.GetTimeUnix();
+        chineseCultureStats.username = user.userName;
+        RestClient.Put(chineseCultureStatsURL + "/" + "tangYuan" + "/"+ localId + ".json?auth=" + idToken, chineseCultureStats);
+    }
+    public void GetPlayerStats(string localId, string idToken)
+    {
+        RestClient.Get<playerStats>(playerStatsURL  + "/" + localId + ".json?auth=" + idToken).Then(response =>
         {
-            //recipe = response;
+            playerStats = response;
+
+        }).Catch(error =>
+        {
+            Debug.Log(error);
         });
     }
+    public void SetChineseCulturalStats(float timeTaken, int mistakes, bool isComplete)
+    {
 
+        chineseCultureStats.updatedOn = chineseCultureStats.GetTimeUnix();
+        chineseCultureStats.username = user.userName;
+        var food = user.food;
+        if (user.food == "Tang Yuan")
+        {
+            food = "tangYuan";
+        }
+        chineseCultureStats.mistakesMade += mistakes;
+        chineseCultureStats.totalTimeTaken += timeTaken;
+        chineseCultureStats.completed = isComplete;
+
+        RestClient.Put(chineseCultureStatsURL + "/" + food + "/" + localId + ".json?auth=" + idToken, chineseCultureStats);
+    }
+    private void GetChineseCulturalStats(string localId, string idToken)
+    {
+        var food = user.food;
+        if(user.food =="Tang Yuan")
+        {
+            food = "tangYuan";
+        }
+        RestClient.Get<chineseCultureStats>(chineseCultureStatsURL + "/" + food + "/" + localId + ".json?auth=" + idToken).Then(response =>
+        {
+            chineseCultureStats = response;
+
+        });
+    }
+    public void SetPlayerStats(float timeTaken, int mistakes)
+    {
+        playerStats.username = user.userName;
+        playerStats.updatedOn = playerStats.GetTimeUnix();
+        if(user.cultural == "Chinese")
+        {
+            playerStats.chineseCultureTimeTaken += timeTaken;
+            
+            if (chineseCultureStats.completed == true)
+            {
+                if (attempted == false)
+                {
+                    playerStats.dishesCompletedChinese += 1;
+                    attempted = true;
+                }
+            }
+
+        }
+
+        playerStats.totalMistakesMade += mistakes;
+
+        RestClient.Put(playerStatsURL + "/" + localId + ".json?auth=" + idToken, playerStats);
+    }
+
+    private void GetPlayers(string localId, string idToken)
+    {
+        RestClient.Get<User>(databaseURL + "/" + localId + ".json?auth=" + idToken).Then(response =>
+        {
+            user = response;
+            Debug.Log(user.email);
+            Debug.Log(user.lastLoggedIn);
+        });
+    }
+    private void UpdatePlayers(string localId, string idToken)
+    {
+        user.active = true;
+        user.lastLoggedIn = user.GetTimeUnix();
+        user.updatedOn = user.GetTimeUnix();
+        RestClient.Put(databaseURL + "/" + localId + ".json?auth=" + idToken, user);
+    }
+    public void SetCulture(string culture)
+    {
+        user.cultural = culture;
+        user.updatedOn = user.GetTimeUnix();
+        RestClient.Put(databaseURL + "/" + localId + ".json?auth=" + idToken, user);
+    }
+    public void SetFood(string food)
+    {
+        user.food = food;
+        user.updatedOn = user.GetTimeUnix();
+        RestClient.Put(databaseURL + "/" + localId + ".json?auth=" + idToken, user);
+    }
     public void SignUpUserButton()
     {
-        SignUpUser("test5@gmail.com", "test5", "abc1235");
+        //clear error msg
+        S_errorMsg.text = "";
+
+        //get the text values
+        string email = S_tbEmail.text.Trim();
+        string password = S_tbPswd.text.Trim();
+        string username = S_tbUsername.text;
+        //check validation
+        if (Validated(email, password, username))
+        {
+            SignUpUser(email, username, password);
+
+        }
+       
     }
 
     public void SignInUserButton()
     {
-        SignInUser(emailText.text, passwordText.text);
+        //clear error msg
+        L_errorMsg.text = "";
+
+        //trim gets rid of empty space
+        var email = L_tbEmail.text.Trim();
+        var password = L_tbPswd.text.Trim();
+        if(L_Validated(email, password))
+        {
+            SignInUser(email, password);
+        }
+        
     }
 
     private void SignUpUser(string email, string username, string password)
     {
         string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
         Debug.Log(userData);
-        //RestClient.Post<SignResponse>("https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + AuthKey, userData).Then(
-        //    response =>
-        //    {
-        //        idToken = response.idToken;
-        //        localId = response.localId;
-        //        playerName = username;
-        //        PostToDatabase(true);
+        RestClient.Post<SignResponse>("https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + AuthKey, userData).Then(
+            response =>
+            {
+                idToken = response.idToken;
+                localId = response.localId;
+                playerName = username;
+                menuUI.SetActive(true);
+                signUpUI.SetActive(false);
+                PostToDatabase(email, username);
+                PostToPlayerStatsDatabase();
+                PostToChineseCultureStatsDatabase();
 
-
-        //    }).Catch(error =>
-        //    {
-        //        Debug.Log(error);
-        //    });
+            }).Catch(error =>
+            {
+                Debug.Log(error);
+            });
     }
-
+    private IEnumerator WaitForSecs(float duration)
+    {
+        UpdatePlayers(localId, idToken);
+        ;
+        yield return new WaitForSeconds(duration);
+    }
     private void SignInUser(string email, string password)
     {
         string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
@@ -111,20 +261,118 @@ public class PlayerData : MonoBehaviour
             response =>
             {
                 idToken = response.idToken;
-                localId = response.localId;
-                GetUsername();
+                localId = response.localId; //userid
+                GetPlayers(localId, idToken);
+                WaitForSecs(2.0f);
+                GetPlayerStats(localId, idToken);
+                GetChineseCulturalStats(localId, idToken);
+                menuUI.SetActive(true);
+                loginUI.SetActive(false);
             }).Catch(error =>
             {
-                Debug.Log(error);
+                Debug.Log("Invalid");
+                L_errorMsg.text = "Wrong Email or Password.";
+                L_tbEmail.text = "";
+                L_tbPswd.text = "";
             });
     }
-
-    private void GetUsername()
+    public bool Validated(string email, string password, string username)
     {
-        RestClient.Get<User>(databaseURL + "/" + localId + ".json?auth=" + idToken).Then(response =>
+        bool isValid = false;
+        string errorMsg = "";
+        //for all email have @
+        const string pattern = @"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$";
+        const RegexOptions options = RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture;
+
+        if (email == "" || password == "" || username == "")
         {
-            playerName = response.userName;
-        });
+            errorMsg = "Please fill in the blanks";
+            //display error message
+            S_errorMsg.text = "Error: " + errorMsg;
+        }
+        else
+        {
+            if (!Regex.IsMatch(email, pattern, options))
+            {
+                errorMsg += " Invalid email";
+                S_tbEmail.text = "";
+            }
+            else
+            {
+                if (password.Length < 6)
+                {
+                    errorMsg += " Password should be at least 6 characters";
+                    S_tbPswd.text = "";
+                }
+                else
+                {
+                    isValid = true;
+                }
+            }
+        }
+
+        if (isValid)
+        {
+            //set the error msg to nothing
+            S_errorMsg.text = "";
+        }
+        else
+        {
+            //display error message
+            S_errorMsg.text = "Error: " + errorMsg;
+        }
+        Debug.Log(isValid);
+        return isValid;
     }
+
+    public bool L_Validated(string email, string password)
+    {
+        bool isValid = false;
+        string errorMsg = "";
+        //for all email have @
+        const string pattern = @"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$";
+        const RegexOptions options = RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture;
+
+        if (email == "" || password == "")
+        {
+            errorMsg = "Please fill in the blanks";
+            //display error message
+            L_errorMsg.text = "Error: " + errorMsg;
+        }
+        else
+        {
+            if (!Regex.IsMatch(email, pattern, options))
+            {
+                errorMsg += " Invalid email";
+                L_tbEmail.text = "";
+            }
+            else
+            {
+                if (password.Length < 6)
+                {
+                    errorMsg += " Password should be at least 6 characters";
+                    L_tbPswd.text = "";
+                }
+                else
+                {
+                    isValid = true;
+                }
+            }
+        }
+
+        if (isValid)
+        {
+            //set the error msg to nothing
+            L_errorMsg.text = "";
+        }
+        else
+        {
+            //display error message
+            L_errorMsg.text = "Error: " + errorMsg;
+        }
+        Debug.Log(isValid);
+        return isValid;
+    }
+    
 
 }

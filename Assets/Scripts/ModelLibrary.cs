@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
+using TMPro;
 
 /******************************************************************************
 Author: Ng Hui Ling, Jordan Yeo Xiang Yu
@@ -32,47 +34,50 @@ public class ModelLibrary : MonoBehaviour
     private List<Vector3> Step1OriginalTransform, Step2OriginalTransform, Step3OriginalTransform, Step4OriginalTransform, Step5OriginalTransform;
     [SerializeField]
     private List<Quaternion> Step1OriginalRotation, Step2OriginalRotation, Step3OriginalRotation, Step4OriginalRotation, Step5OriginalRotation;
+    [SerializeField]
+    private TMP_Text instructionText;
+    [SerializeField]
+    private GameObject[] buttons;
     private void Start()
     {
         //hide the asset that should be hidden at first
         for (int i = 0; i < SetupAsset.Length; i++)
         {
             SetupAsset[i].SetActive(false);
-            //if (i == 0)
-            //{
-            //    SetupAsset[i].SetActive(true);
-            //}
-            //else 
-            //{
-            //    SetupAsset[i].SetActive(false);
-            //}
             
         }
-        /**
-        //get the objectmanipulator and nearinteractiongrabble to inactive to not allow the object to be movable
-        for (int i = 0; i < InteractableAsset.Length; i++)
-        {
-            if (InteractableAsset[i].GetComponent<NearInteractionGrabbable>() != null)
-            {
-                InteractableAsset[i].GetComponent<NearInteractionGrabbable>().enabled = false;
-            }
-            if (InteractableAsset[i].GetComponent<ObjectManipulator>() != null)
-            {
-                InteractableAsset[i].GetComponent<ObjectManipulator>().enabled = false;
-            }
-                     
-        }
-        **/
+        
     }
     private void Update()
     {
-        if (GameManager.instance.isReseted())
+      
+    }
+
+    public void resetGame()
+    {
+        for (int i = 0; i < SetupAsset.Length; i++)
         {
-            ResetTransforms();
-            GameManager.instance.ToggleReset();
+            SetupAsset[i].SetActive(false);
+            //set the moving settings to true again
+            //set the surface magnistism to true again
+
+            SetupAsset[i].GetComponent<BoxCollider>().enabled = true;
+            SetupAsset[i].GetComponent<NearInteractionGrabbable>().enabled = true;
+            SetupAsset[i].GetComponent<ObjectManipulator>().enabled = true;
+            SetupAsset[i].GetComponent<Interactable>().enabled = true;
+            SetupAsset[i].GetComponent<SurfaceMagnetism>().enabled = true;
+            SetupAsset[i].gameObject.transform.position = new Vector3(0,0,0);
+            SetupAsset[i].gameObject.transform.rotation = new Quaternion(0,0,0,0);
         }
 
+        instructionText.text = "Place the decoration to a place of you liking. Once your are done click on done";
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            buttons[i].SetActive(true);
+        }
+        
     }
+
     public void SetOriginalPosition()
     {
         //get the starting transform values of all the interactable objects
@@ -127,7 +132,7 @@ public class ModelLibrary : MonoBehaviour
         for (int i = 0; i < Step4Asset.Length; i++)
         {
 
-            Step4OriginalTransform.Add(Step4Asset[i].transform.position) ;
+            Step4OriginalTransform.Add(Step4Asset[i].transform.position);
             Step4OriginalRotation.Add(Step4Asset[i].transform.rotation);
 
             if (Step4Asset[i].GetComponent<NearInteractionGrabbable>() != null)
@@ -159,7 +164,8 @@ public class ModelLibrary : MonoBehaviour
         for (int i = 0; i < SetupAsset.Length; i++)
         {
             //after the setup is done, set the collider to inactive. This is done to not affect the interactable assets from being selected
-            SetupAsset[i].GetComponent<BoxCollider>().enabled = false;            
+            SetupAsset[i].GetComponent<BoxCollider>().enabled = false;
+            
         }
     }
 

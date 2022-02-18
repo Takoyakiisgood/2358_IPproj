@@ -25,5 +25,5 @@ MonoBehaviour:
   displayOption: 0
   visibleMaterial: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
   occlusionMaterial: {fileID: 2100000, guid: a809c7ea182b699409443d46d5b42435, type: 2}
-  spatialMeshObject: {fileID: 919132149155446097, guid: 245a07eef7cc52748ac5a7b90b805b4f,
+  spatialMeshObject: {fileID: 919132149155446097, guid: 318a5ced8b9d30c4b9784de44c92609a,
     type: 3}

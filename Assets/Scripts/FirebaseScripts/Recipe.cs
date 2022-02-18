@@ -16,15 +16,9 @@ using System;
 
 public class Recipe
 {
-    public string part1;
-    public string part2;
-    public string part3;
-    public string part4;
-    public string part5;
-    public long lastLoggedIn;
-    public long createdOn;
-    public long updatedOn;
+    public string part1, part2, part3, part4, part5;
 
+    Dictionary<string, object> step1Instruction = new Dictionary<string, object>();
 
     public Recipe()
     {
@@ -39,9 +33,6 @@ public class Recipe
         this.part4 = part4;
         this.part5 = part5;
 
-        var timestamp = this.GetTimeUnix();
-        this.createdOn = timestamp;
-        this.updatedOn = timestamp;
     }
 
     public string SaveToJson()

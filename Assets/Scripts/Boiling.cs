@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Microsoft.MixedReality.Toolkit.UI;
 public class Boiling : MonoBehaviour
 {
     public static Boiling instance;
@@ -12,7 +12,8 @@ public class Boiling : MonoBehaviour
     private bool startBoil;
     public bool hasOn; 
     public Animator animator;
-
+    public AudioClip boilingSFX;
+    public GameObject feedbackTip;
     private void Start()
     {
         instance = this;
@@ -24,10 +25,13 @@ public class Boiling : MonoBehaviour
         {
             Debug.Log("START");
             timer -= Time.deltaTime;
+            feedbackTip.SetActive(true);
+            feedbackTip.GetComponent<ToolTip>().ToolTipText = timer.ToString();
             if (timer < 0)
             {
                 BoilWater();
                 startBoil = false;
+                feedbackTip.SetActive(false);
             }
         }
     }
@@ -68,6 +72,8 @@ public class Boiling : MonoBehaviour
             boilContents[i].Play();
         }
         GameManager.instance.BoilWater();
+        GetComponent<AudioSource>().Play();
+        
     }
     
     private void StopBoiling()
@@ -77,5 +83,6 @@ public class Boiling : MonoBehaviour
         {
             boilContents[i].Stop();
         }
+        GetComponent<AudioSource>().Stop();
     }
 }
